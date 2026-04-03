@@ -1,0 +1,508 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  line-height: 1.68;
+  letter-spacing: 0.017em;
+  font-weight: 400;
+  background:
+    radial-gradient(circle at 15% 12%, rgba(212, 175, 55, 0.15), transparent 28%),
+    radial-gradient(circle at 82% 6%, rgba(139, 26, 26, 0.09), transparent 24%),
+    radial-gradient(rgba(43, 30, 22, 0.038) 0.7px, transparent 0.7px),
+    radial-gradient(rgba(43, 30, 22, 0.028) 0.7px, transparent 0.7px),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"),
+    #fbf7e9;
+  background-size: auto, auto, 22px 22px, 28px 28px, 200px 200px, auto;
+  background-position: 0 0, 0 0, 0 0, 11px 11px, 0 0, 0 0;
+  position: relative;
+}
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: min(26vw, 360px);
+  pointer-events: none;
+  /* Must stay below page content: ::after paints after siblings and would cover the UI */
+  z-index: 0;
+  opacity: 0.14;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+/* Stack all body children above decorative ::before/::after */
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+body::before {
+  left: -30px;
+  background-image: url('/textures/banana-leaf-shadow-left.png');
+  background-position: left center;
+}
+
+body::after {
+  right: -34px;
+  transform: scaleX(-1);
+  background-image: url('/textures/banana-leaf-shadow-left.png');
+  background-position: right center;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 4.5rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   FILM GRAIN — the secret sauce. Must be VISIBLE.
+   Uses a layered approach: SVG noise + CSS multiply.
+   ═══════════════════════════════════════════════ */
+.defs-sprite {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+.film-grain {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  overflow: hidden;
+  border: 0;
+  outline: none;
+  z-index: 9999;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════
+   HAND-DRAWN GOLD BORDER — the "frame"
+   A slightly wobbly double-line around main content.
+   ═══════════════════════════════════════════════ */
+.hand-drawn-frame {
+  position: relative;
+}
+.hand-drawn-frame::before {
+  content: '';
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  border: 2px solid rgba(212, 175, 55, 0.25);
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 40;
+}
+.hand-drawn-frame::after {
+  content: '';
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  border: 1px solid rgba(212, 175, 55, 0.14);
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 40;
+}
+
+@media (max-width: 768px) {
+  .hand-drawn-frame::before {
+    top: 6px; left: 6px; right: 6px; bottom: 6px;
+  }
+  .hand-drawn-frame::after {
+    top: 9px; left: 9px; right: 9px; bottom: 9px;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   MUGHAL ARCH
+   ═══════════════════════════════════════════════ */
+.mughal-arch {
+  /* Smoother arch silhouette for the hero image frame */
+  clip-path: none;
+  border-radius: 48% 48% 10px 10px / 16% 16% 10px 10px;
+}
+
+/* Hero food image: shape comes from shared river-wave clip-path (see riverWave.js) */
+.hero-food-frame.mughal-arch {
+  border-radius: 0;
+  overflow: hidden;
+}
+
+/* White path in SVG mask = visible; luminance avoids alpha/white mismatches across engines */
+.hero-food-frame.hero-food-frame--wave-mask {
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+}
+
+/* Straight 1px bottom border reads as a “flat” cut; wave follows gold stroke only on sides/top */
+.hero-food-frame.hero-food-frame--wave-mask.mughal-frame {
+  border-bottom-color: transparent;
+  border-bottom-width: 0;
+}
+
+.mughal-frame {
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  box-shadow: 0 0 0 1px rgba(139, 26, 26, 0.2);
+}
+
+/* ═══════════════════════════════════════════════
+   HERO VINTAGE MAP + SCRAPBOOK STAINS
+   ═══════════════════════════════════════════════ */
+.hero-vintage-map {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero-vintage-map::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.16;
+  background-image:
+    url('/textures/dhaka-map-vintage.png'),
+    radial-gradient(ellipse at 70% 18%, rgba(139, 26, 26, 0.08), transparent 44%);
+  /* Repeat map horizontally so texture never hard-stops at viewport edge */
+  background-repeat: repeat-x, no-repeat;
+  background-size: auto 115%, 100% 100%;
+  background-position: center 20%, center;
+}
+
+.hero-dhaka-watermark {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  transform: translate(-50%, -50%) rotate(-7deg);
+  font-family: var(--font-serif), 'Playfair Display', serif;
+  font-size: clamp(7rem, 28vw, 20rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: rgba(139, 26, 26, 0.055);
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  z-index: 1;
+  line-height: 1;
+}
+
+.hero-scrapbook-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background-image: url('/textures/chai-rings-spice-dust.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+}
+
+/* ═══════════════════════════════════════════════
+   MENU DOTTED LEADER
+   ═══════════════════════════════════════════════ */
+.menu-leader {
+  flex: 1;
+  border-bottom: 2px dotted rgba(43, 30, 22, 0.22);
+  margin: 0 0.5rem;
+  min-width: 1.5rem;
+  align-self: center;
+  transform: translateY(-3px);
+}
+
+/* ═══════════════════════════════════════════════
+   POLAROID PHOTOS — the scrapbook feel
+   ═══════════════════════════════════════════════ */
+.polaroid-photo {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease;
+}
+.polaroid-photo:hover {
+  transform: rotate(0deg) scale(1.05) !important;
+  box-shadow: 0 24px 60px rgba(43, 30, 22, 0.3);
+  z-index: 10;
+}
+
+/* Single centered “pinned” tape on polaroid cards — contained inside .polaroid-photo */
+.polaroid-tape {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  z-index: 3;
+  width: 58px;
+  height: 13px;
+  margin: 0;
+  padding: 0;
+  transform: translateX(-50%) rotate(-3deg);
+  transform-origin: center center;
+  background: rgba(252, 248, 230, 0.92);
+  border: 1px solid rgba(43, 30, 22, 0.12);
+  box-shadow: 0 2px 6px rgba(43, 30, 22, 0.12);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════
+   HANDWRITTEN NOTES — scattered, human
+   ═══════════════════════════════════════════════ */
+.handwritten-note {
+  font-family: var(--font-hand), 'Caveat', cursive;
+  color: #8b1a1a;
+  position: absolute;
+  pointer-events: none;
+  line-height: 1.2;
+  z-index: 5;
+}
+
+/* ═══════════════════════════════════════════════
+   AUDIO PLAYER PULSE
+   ═══════════════════════════════════════════════ */
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+.audio-pulse::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #8b1a1a;
+  animation: pulse-ring 2s ease-out infinite;
+  z-index: -1;
+}
+
+/* ═══════════════════════════════════════════════
+   MARQUEE
+   ═══════════════════════════════════════════════ */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ═══════════════════════════════════════════════
+   SCATTERED MOTIFS — spice/floral behind text
+   Printed-on-paper feel at very low opacity
+   ═══════════════════════════════════════════════ */
+.motif-scatter {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.06;
+  z-index: 0;
+}
+
+.bengali-watermark {
+  position: absolute;
+  inset: auto;
+  font-family: var(--font-serif), 'Playfair Display', serif;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: rgba(139, 26, 26, 0.06);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  white-space: nowrap;
+}
+
+/* Uniform small decorative labels site-wide (hero uses .hero-dhaka-watermark instead) */
+.bengali-watermark--subtle {
+  font-size: clamp(1.65rem, 4.2vw, 2.85rem) !important;
+  font-weight: 700 !important;
+  color: rgba(139, 26, 26, 0.052) !important;
+  letter-spacing: 0.08em !important;
+}
+
+.section-header-texture {
+  position: relative;
+}
+
+.section-header-texture::before {
+  content: '';
+  position: absolute;
+  inset: -12px -16px;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84' viewBox='0 0 84 84'%3E%3Cg fill='none' stroke='%23D4AF37' stroke-width='0.7'%3E%3Cpath d='M42 2 L82 42 L42 82 L2 42Z'/%3E%3Cpath d='M42 16 L68 42 L42 68 L16 42Z'/%3E%3Ccircle cx='42' cy='42' r='4'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 84px 84px;
+  z-index: -1;
+}
+
+.ink-bleed {
+  position: relative;
+  display: inline-block;
+}
+
+.ink-bleed::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 0.48em;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(139, 26, 26, 0.28), rgba(212, 175, 55, 0.2));
+  border-radius: 2px;
+  filter: blur(0.3px);
+  transition: width 240ms ease;
+}
+
+.group:hover .ink-bleed::after {
+  width: 100%;
+}
+
+/* ═══════════════════════════════════════════════
+   MENU LEDGER PAPER + CLIPPINGS
+   ═══════════════════════════════════════════════ */
+.menu-ledger-bg {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Ledger textures bleed into the river cap — offsets match RiverWaveTopCap (h-11 / md:h-[3.75rem]) */
+.menu-ledger-bg.menu-with-river-cap::before,
+.menu-ledger-bg.menu-with-river-cap::after {
+  top: -2.75rem;
+  min-height: calc(100% + 2.75rem);
+}
+
+@media (min-width: 768px) {
+  .menu-ledger-bg.menu-with-river-cap::before,
+  .menu-ledger-bg.menu-with-river-cap::after {
+    top: -3.75rem;
+    min-height: calc(100% + 3.75rem);
+  }
+}
+
+/* Menu category tabs — flat bordered pills; active state uses Tailwind utilities in JSX */
+button.menu-category-tab {
+  border-radius: 2px;
+  border: 1px solid rgba(43, 30, 22, 0.2);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  filter: none;
+  box-shadow: none;
+  background-image: none;
+  text-shadow: none;
+}
+
+.menu-item-price::before,
+.menu-item-price::after {
+  content: none;
+}
+
+#delivery .section-header-texture {
+  overflow: hidden;
+}
+
+.menu-row {
+  border-left: 3px solid transparent;
+  padding-left: 0.75rem;
+  margin-left: -0.25rem;
+}
+
+.menu-row--alt {
+  background: rgba(43, 30, 22, 0.025);
+  border-left-color: rgba(212, 175, 55, 0.35);
+}
+
+.menu-ledger-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.2;
+  background-image:
+    linear-gradient(to bottom, rgba(43, 30, 22, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 26, 26, 0.09) 1px, transparent 1px),
+    url('/textures/old-ledger-bangla-receipts.png');
+  background-size: 100% 34px, 64px 100%, 520px auto;
+  background-position: 0 0, 0 0, center 26%;
+}
+
+.menu-ledger-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.12;
+  background-image:
+    linear-gradient(16deg, rgba(43, 30, 22, 0.22), rgba(43, 30, 22, 0.05)),
+    linear-gradient(-8deg, rgba(212, 175, 55, 0.24), rgba(212, 175, 55, 0.03));
+  background-size: 210px 140px, 180px 120px;
+  background-position: 94% 12%, 6% 78%;
+  background-repeat: no-repeat;
+}
+
+/* ═══════════════════════════════════════════════
+   CUSTOM SCROLLBAR
+   ═══════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 7px; }
+::-webkit-scrollbar-track { background: #FBF7E9; }
+::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #8b1a1a; }
+
+/* ═══════════════════════════════════════════════
+   RIPPED PAPER EDGE
+   ═══════════════════════════════════════════════ */
+.ripped-edge-bottom {
+  position: relative;
+}
+.ripped-edge-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 32px;
+  z-index: 5;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 32' preserveAspectRatio='none'%3E%3Cpath d='M0 0 Q20 18 50 8 Q75 0 100 10 Q130 22 160 6 Q185 0 210 12 Q240 24 270 8 Q300 0 330 14 Q355 22 380 10 Q410 2 440 16 Q465 24 490 8 Q520 0 550 12 Q580 22 610 6 Q640 0 670 14 Q695 20 720 8 Q750 0 780 12 Q810 24 840 6 Q870 0 900 16 Q925 22 950 10 Q980 2 1010 14 Q1040 22 1070 6 Q1100 0 1130 12 Q1160 22 1200 8 L1200 32 L0 32 Z' fill='%23FBF7E9'/%3E%3C/svg%3E") no-repeat center;
+  background-size: 100% 100%;
+}
+
+.ripped-edge-top {
+  position: relative;
+}
+.ripped-edge-top::before {
+  content: '';
+  position: absolute;
+  top: -33px;
+  left: 0;
+  right: 0;
+  height: 32px;
+  z-index: 5;
+  pointer-events: none;
+  display: block;
+  font-size: 0;
+  line-height: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 32' preserveAspectRatio='none'%3E%3Cpath d='M0 32 Q20 14 50 24 Q75 32 100 22 Q130 10 160 26 Q185 32 210 20 Q240 8 270 24 Q300 32 330 18 Q355 10 380 22 Q410 30 440 16 Q465 8 490 24 Q520 32 550 20 Q580 10 610 26 Q640 32 670 18 Q695 12 720 24 Q750 32 780 20 Q810 8 840 26 Q870 32 900 16 Q925 10 950 22 Q980 30 1010 18 Q1040 10 1070 26 Q1100 32 1130 20 Q1160 10 1200 24 L1200 0 L0 0 Z' fill='%232B1E16'/%3E%3C/svg%3E") no-repeat center;
+  background-size: 100% 100%;
+}

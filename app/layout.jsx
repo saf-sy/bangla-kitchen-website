@@ -37,59 +37,6 @@ export default function RootLayout({ children }) {
       className={`${playfair.variable} ${inter.variable} ${caveat.variable}`}
     >
       <body className="bg-parchment text-espresso font-sans antialiased">
-        {/*
-          Defs-only SVG: keeps filter IDs in the document without a paintable viewport.
-          Mixing these with the full-screen grain layer caused a stray box in some browsers.
-        */}
-        <svg
-          className="defs-sprite pointer-events-none"
-          aria-hidden="true"
-          width="0"
-          height="0"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            <filter
-              id="rickshaw-knockout-white"
-              colorInterpolationFilters="sRGB"
-              x="-15%"
-              y="-15%"
-              width="130%"
-              height="130%"
-            >
-              <feComponentTransfer in="SourceGraphic" result="crushed">
-                <feFuncR type="linear" slope="1.28" intercept="-0.06" />
-                <feFuncG type="linear" slope="1.28" intercept="-0.06" />
-                <feFuncB type="linear" slope="1.28" intercept="-0.06" />
-              </feComponentTransfer>
-              <feColorMatrix
-                in="crushed"
-                type="matrix"
-                values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -0.2126 -0.7152 -0.0722 0 1"
-                result="knockout"
-              />
-              <feComponentTransfer in="knockout" result="alphaLifted">
-                <feFuncA type="linear" slope="3.45" intercept="-0.24" />
-              </feComponentTransfer>
-              <feMorphology
-                in="alphaLifted"
-                operator="dilate"
-                radius="0.22"
-                result="spread"
-              />
-              <feColorMatrix
-                in="spread"
-                type="matrix"
-                values="0.5 0 0 0 0.18  0 0.44 0 0 0.12  0 0 0.38 0 0.1  0 0 0 1 0"
-                result="inked"
-              />
-              <feComponentTransfer in="inked" result="rickshawFinal">
-                <feFuncA type="linear" slope="1.04" intercept="-0.02" />
-              </feComponentTransfer>
-            </filter>
-          </defs>
-        </svg>
-
         <svg
           className="film-grain"
           aria-hidden="true"
@@ -111,7 +58,7 @@ export default function RootLayout({ children }) {
           <rect width="100%" height="100%" filter="url(#grain)" opacity="0.11" />
         </svg>
 
-        {children}
+        <div className="relative z-10 min-h-screen">{children}</div>
       </body>
     </html>
   )

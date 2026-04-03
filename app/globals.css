@@ -4,6 +4,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Fixed navbar + top strip: keep #menu / #delivery / etc. from hiding under the header */
+  scroll-padding-top: 9rem;
 }
 
 body {
@@ -91,7 +93,8 @@ body::after {
   overflow: hidden;
   border: 0;
   outline: none;
-  z-index: 9999;
+  /* Below page chrome (navbar 10050) and main content (layout z-10); avoids blank webviews that mishandle blend + high z-index */
+  z-index: 2;
   pointer-events: none;
   mix-blend-mode: multiply;
   opacity: 1;

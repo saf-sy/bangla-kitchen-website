@@ -1,13 +1,29 @@
 'use client'
 
+import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { BengaliWatermark, FloralMotif, JamdaniPattern, PolaroidPhoto, SpiceMotif } from '@/components/art/Decoratives'
 import { foodImages } from '@/app/data/siteContent'
+import { getSectionBottomClipPolygonRem } from '@/lib/riverWave'
+import { useRiverDividerCapRem } from '@/lib/useRiverDividerCapRem'
 
 export default function StorySection() {
+  const dividerCapRem = useRiverDividerCapRem()
+  const storyBottomClip = useMemo(
+    () => getSectionBottomClipPolygonRem(dividerCapRem, 'classic'),
+    [dividerCapRem],
+  )
+
   return (
     <>
-      <section className="relative py-32 md:py-44 overflow-hidden">
+      <section
+        className="relative bg-parchment py-32 md:py-44 overflow-x-clip overflow-y-visible mb-[-1px]"
+        style={{
+          isolation: 'isolate',
+          WebkitClipPath: storyBottomClip,
+          clipPath: storyBottomClip,
+        }}
+      >
         <JamdaniPattern id="jamdani-story" />
         <BengaliWatermark text="বাংলা রান্না" className="top-16 right-[4%] rotate-3" />
         <SpiceMotif className="w-36 h-36 top-12 right-[8%] rotate-12 hidden lg:block" />
@@ -44,25 +60,27 @@ export default function StorySection() {
               <p className="font-hand text-xl text-terracotta -rotate-1">— The Bangla Kitchen Family</p>
             </motion.div>
           </div>
-        </div>
-      </section>
 
-      <section className="py-20 md:py-28 relative">
-        <BengaliWatermark text="স্বাদ" className="top-20 left-[10%] -rotate-8" />
-        <div className="max-w-5xl mx-auto px-8 md:px-10">
-          <div className="section-header-texture inline-block pr-3 mb-10">
-            <p className="font-hand text-terracotta text-xl mb-1 -rotate-1">From Our Table</p>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold tracking-tight">A Taste of Home</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 md:gap-4 items-start">
-            <div className="sm:col-span-5 sm:mt-8">
-              <PolaroidPhoto {...foodImages[0]} />
+          <BengaliWatermark text="স্বাদ" className="top-[42%] left-[6%] md:top-[48%] -rotate-8" />
+          <div className="max-w-5xl mx-auto mt-20 md:mt-28 pt-16 md:pt-20 border-t border-espresso/8">
+            <div className="section-header-texture inline-block pr-3 mb-10">
+              <h2 className="font-serif text-4xl md:text-5xl font-bold tracking-tight text-balance leading-[1.15]">
+                <span className="font-hand text-terracotta text-2xl md:text-3xl font-normal block sm:inline sm:mr-2 mb-1 sm:mb-0 -rotate-1 origin-left">
+                  From Our Table
+                </span>
+                <span className="block sm:inline">A Taste of Home</span>
+              </h2>
             </div>
-            <div className="sm:col-span-4 sm:-mt-4">
-              <PolaroidPhoto {...foodImages[1]} />
-            </div>
-            <div className="sm:col-span-3 sm:mt-14">
-              <PolaroidPhoto {...foodImages[2]} />
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 md:gap-4 items-start">
+              <div className="sm:col-span-5 sm:mt-8">
+                <PolaroidPhoto {...foodImages[0]} />
+              </div>
+              <div className="sm:col-span-4 sm:-mt-4">
+                <PolaroidPhoto {...foodImages[1]} />
+              </div>
+              <div className="sm:col-span-3 sm:mt-14">
+                <PolaroidPhoto {...foodImages[2]} />
+              </div>
             </div>
           </div>
         </div>

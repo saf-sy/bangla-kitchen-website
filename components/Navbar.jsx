@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { MapPin, Menu, Phone, X } from 'lucide-react'
 
 const navLinks = [
@@ -26,7 +27,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 w-full max-w-[100vw] overflow-x-hidden transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-[10050] w-full max-w-[100vw] overflow-x-hidden transition-all duration-500 ${
         scrolled
           ? 'bg-parchment/92 backdrop-blur-md shadow-lg shadow-espresso/5'
           : 'bg-transparent'
@@ -59,18 +60,18 @@ export default function Navbar() {
 
       {/* Main Nav */}
       <nav className="max-w-6xl mx-auto min-w-0 px-6 py-4 flex items-center justify-between gap-3 overflow-x-hidden">
-        <a href="#" className="flex min-w-0 shrink items-center gap-3 md:gap-4">
+        <a href="#top" className="flex min-w-0 shrink items-center gap-3 md:gap-4">
           {!logoError ? (
             <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-gold/50 bg-parchment p-1 shadow-md shadow-espresso/10 md:h-16 md:w-16 md:p-1.5">
-              <img
+              <Image
                 src="/textures/bangla-kitchen-logo.png"
                 alt="Bangla Kitchen & Sweets"
                 width={96}
                 height={96}
+                sizes="(max-width: 768px) 56px, 64px"
+                priority
                 className="h-full w-full object-contain"
                 style={{ transform: `scale(${NAV_LOGO_INNER_SCALE})`, transformOrigin: 'center center' }}
-                loading="eager"
-                decoding="async"
                 onError={() => setLogoError(true)}
               />
             </span>

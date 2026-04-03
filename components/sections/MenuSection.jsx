@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   BengaliWatermark,
   FloralMotif,
@@ -9,14 +9,26 @@ import {
   SpiceMotif,
 } from '@/components/art/Decoratives'
 import { categories, menuData } from '@/app/data/siteContent'
+import { getSectionBottomClipPolygonRem } from '@/lib/riverWave'
+import { useRiverDividerCapRem } from '@/lib/useRiverDividerCapRem'
 
 export default function MenuSection() {
   const [activeCategory, setActiveCategory] = useState('Appetizers')
+  const dividerCapRem = useRiverDividerCapRem()
+  const menuBottomClip = useMemo(
+    () => getSectionBottomClipPolygonRem(dividerCapRem, 'swell'),
+    [dividerCapRem],
+  )
 
   return (
     <section
       id="menu"
-      className="menu-ledger-bg menu-with-river-cap bg-parchment relative overflow-x-clip overflow-y-visible pb-32 md:pb-44 pt-0 -mt-[calc(2.75rem+2px)] md:-mt-[calc(3.75rem+2px)]"
+      className="menu-ledger-bg menu-with-river-cap bg-parchment relative overflow-x-clip overflow-y-visible pb-32 md:pb-44 pt-0 -mt-[calc(2.75rem+2px)] md:-mt-[calc(3.75rem+2px)] mb-[-1px]"
+      style={{
+        isolation: 'isolate',
+        WebkitClipPath: menuBottomClip,
+        clipPath: menuBottomClip,
+      }}
     >
       <div
         className="relative z-[4] w-full text-[0] leading-[0] pointer-events-none -mb-0.5 md:-mb-[3px]"

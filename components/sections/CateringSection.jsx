@@ -249,7 +249,7 @@ export default function CateringSection() {
 
           <div
             ref={rickshawRowRef}
-            className="relative isolate z-[2] mt-8 md:mt-10 h-[12rem] md:h-[16rem] overflow-hidden bg-parchment pb-2 pt-3 md:pt-5 pointer-events-none text-espresso w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)]"
+            className="relative isolate z-[2] mt-8 md:mt-10 h-[14rem] md:h-[18rem] overflow-hidden bg-parchment pb-2 pt-3 md:pt-5 pointer-events-none text-espresso w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)]"
           >
             <div className="absolute inset-x-0 bottom-2 md:bottom-4 border-b border-dashed border-espresso/45" />
             <motion.div
@@ -270,7 +270,7 @@ export default function CateringSection() {
               <RickshawSprite
                 ref={rickshawSpriteRef}
                 isMoving={isRickshawMoving}
-                className="drop-shadow-[0px_0px_0.5px_rgba(43,30,22,0.6)] origin-bottom scale-[0.45] md:scale-[0.55]"
+                className="drop-shadow-[0px_0px_0.5px_rgba(43,30,22,0.6)] origin-bottom scale-[0.4] md:scale-[0.6]"
               />
             </motion.div>
           </div>

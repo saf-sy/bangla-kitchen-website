@@ -115,28 +115,46 @@ export function JamdaniPattern({ id = 'jamdani' }) {
 
 export function VintageStamp() {
   return (
-    <svg viewBox="0 0 200 200" className="w-32 h-32 md:w-40 md:h-40 animate-spin-slow" aria-hidden="true">
+    <svg viewBox="0 0 200 200" className="w-32 h-32 md:w-36 md:h-36 animate-spin-slow" aria-hidden="true">
       <defs>
-        <path id="stampCircle" d="M 100,100 m -62,0 a 62,62 0 1,1 124,0 a 62,62 0 1,1 -124,0" />
+        <path id="stampCircle" d="M 100,100 m -63,0 a 63,63 0 1,1 126,0 a 63,63 0 1,1 -126,0" />
+        <path id="innerCircle" d="M 100,100 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" />
       </defs>
-      <circle cx="100" cy="100" r="90" fill="#FBF7E9" fillOpacity="0.85" />
-      <circle cx="100" cy="100" r="82" fill="none" stroke={WAVE_BRICK} strokeWidth="2.5" strokeDasharray="5 3" />
-      <circle cx="100" cy="100" r="76" fill="none" stroke={WAVE_BRICK} strokeWidth="1" />
-      <text fill={WAVE_BRICK} className="text-[9.5px] font-bold tracking-[0.08em] uppercase">
-        <textPath xlinkHref="#stampCircle">
-          AUTHENTIC DHAKA RECIPES • 100% HALAL • AUTHENTIC DHAKA RECIPES • 100% HALAL •
+
+      {/* Base Parchment Fill */}
+      <circle cx="100" cy="100" r="92" fill="#FBF7E9" fillOpacity="0.95" />
+
+      {/* Scalloped Gold Outer Rim */}
+      <circle cx="100" cy="100" r="95" fill="none" stroke={WAVE_GOLD} strokeWidth="6" strokeDasharray="3 4.5" strokeLinecap="round" opacity="0.85" />
+      
+      {/* Outer Rings */}
+      <circle cx="100" cy="100" r="88" fill="none" stroke={WAVE_BRICK} strokeWidth="1.2" opacity="0.9" />
+      <circle cx="100" cy="100" r="85" fill="none" stroke={WAVE_BRICK} strokeWidth="2.5" opacity="0.8" />
+      
+      {/* Outer Text */}
+      <text fill={WAVE_BRICK} className="text-[10px] font-bold uppercase" style={{ letterSpacing: '0.16em' }}>
+        <textPath xlinkHref="#stampCircle" startOffset="0%">
+          AUTHENTIC DHAKA RECIPE • 100% HALAL • AUTHENTIC DHAKA RECIPE • 100% HALAL •
         </textPath>
       </text>
-      <circle cx="100" cy="100" r="31" fill="#f8f0df" fillOpacity="0.9" />
-      <circle cx="100" cy="100" r="28" fill="none" stroke={WAVE_BRICK} strokeWidth="1.4" />
-      <circle cx="100" cy="100" r="21" fill="none" stroke="#D4AF37" strokeWidth="1" />
+
+      {/* Inner Rings */}
+      <circle cx="100" cy="100" r="46" fill="none" stroke={WAVE_BRICK} strokeWidth="1" opacity="0.9" />
+      <circle cx="100" cy="100" r="43" fill="none" stroke={WAVE_GOLD} strokeWidth="1.5" strokeDasharray="4 2" />
+
+      {/* Center Motif (Star/Diamond) */}
       <path
-        d="M100 86 L103.2 93.4 L111.2 94 L105 99.4 L107 107 L100 102.8 L93 107 L95 99.4 L88.8 94 L96.8 93.4 Z"
-        fill={WAVE_BRICK}
-        fillOpacity="0.9"
+        d="M 100 76 L 102 82 L 108 82 L 103 86 L 105 92 L 100 88 L 95 92 L 97 86 L 92 82 L 98 82 Z"
+        fill={WAVE_GOLD}
+        opacity="0.9"
       />
-      <text x="100" y="117" textAnchor="middle" fill={WAVE_BRICK} className="text-[8.5px] font-serif font-bold tracking-[0.14em]">
-        BANGLA KITCHEN
+      
+      {/* Center Typography */}
+      <text x="100" y="106" textAnchor="middle" fill={WAVE_BRICK} className="text-[12px] font-serif font-black tracking-widest uppercase">
+        EST.
+      </text>
+      <text x="100" y="119" textAnchor="middle" fill={WAVE_BRICK} className="text-[11px] font-bold tracking-widest opacity-80">
+        1998
       </text>
     </svg>
   )
@@ -195,7 +213,7 @@ export function SmartFoodImage({
         sizes={sizes ?? '(max-width: 1024px) 100vw, 50vw'}
         className={className}
         priority={priority}
-        unoptimized
+        loading={priority ? undefined : "lazy"}
         onError={() => setSafeSrc(fallbackSrc)}
       />
     )
@@ -209,7 +227,7 @@ export function SmartFoodImage({
       height={height}
       className={className}
       priority={priority}
-      unoptimized
+      loading={priority ? undefined : "lazy"}
       onError={() => setSafeSrc(fallbackSrc)}
     />
   )

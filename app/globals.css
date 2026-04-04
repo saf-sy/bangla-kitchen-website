@@ -141,41 +141,7 @@ body::after {
   }
 }
 
-/* ═══════════════════════════════════════════════
-   MUGHAL ARCH
-   ═══════════════════════════════════════════════ */
-.mughal-arch {
-  /* Smoother arch silhouette for the hero image frame */
-  clip-path: none;
-  border-radius: 48% 48% 10px 10px / 16% 16% 10px 10px;
-}
 
-/* Hero food image: shape comes from shared river-wave clip-path (see riverWave.js) */
-.hero-food-frame.mughal-arch {
-  border-radius: 0;
-  overflow: hidden;
-}
-
-/* White path in SVG mask = visible; luminance avoids alpha/white mismatches across engines */
-.hero-food-frame.hero-food-frame--wave-mask {
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-mode: luminance;
-  mask-mode: luminance;
-}
-
-/* Straight 1px bottom border reads as a “flat” cut; wave follows gold stroke only on sides/top */
-.hero-food-frame.hero-food-frame--wave-mask.mughal-frame {
-  border-bottom-color: transparent;
-  border-bottom-width: 0;
-}
-
-.mughal-frame {
-  border: 1px solid rgba(212, 175, 55, 0.55);
-  box-shadow: 0 0 0 1px rgba(139, 26, 26, 0.2);
-}
 
 /* ═══════════════════════════════════════════════
    HERO VINTAGE MAP + SCRAPBOOK STAINS
@@ -209,8 +175,9 @@ body::after {
   font-family: var(--font-serif), 'Playfair Display', serif;
   font-size: clamp(7rem, 28vw, 20rem);
   font-weight: 900;
-  letter-spacing: 0.02em;
-  color: rgba(139, 26, 26, 0.055);
+  letter-spacing: normal; /* DO NOT change this: Bengali kerning will break the matra */
+  color: rgb(139, 26, 26);
+  opacity: 0.055;
   pointer-events: none;
   user-select: none;
   white-space: nowrap;
@@ -326,8 +293,9 @@ body::after {
   inset: auto;
   font-family: var(--font-serif), 'Playfair Display', serif;
   font-weight: 700;
-  letter-spacing: 0.07em;
-  color: rgba(139, 26, 26, 0.06);
+  letter-spacing: normal;
+  color: rgb(139, 26, 26);
+  opacity: 0.06;
   pointer-events: none;
   user-select: none;
   z-index: 0;
@@ -338,8 +306,9 @@ body::after {
 .bengali-watermark--subtle {
   font-size: clamp(1.65rem, 4.2vw, 2.85rem) !important;
   font-weight: 700 !important;
-  color: rgba(139, 26, 26, 0.052) !important;
-  letter-spacing: 0.08em !important;
+  color: rgb(139, 26, 26) !important;
+  opacity: 0.052 !important;
+  letter-spacing: normal !important;
 }
 
 .section-header-texture {

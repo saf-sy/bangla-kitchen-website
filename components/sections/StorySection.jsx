@@ -1,29 +1,29 @@
 'use client'
 
-import { useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { BengaliWatermark, FloralMotif, JamdaniPattern, PolaroidPhoto, SpiceMotif } from '@/components/art/Decoratives'
+import { BengaliWatermark, FloralMotif, JamdaniPattern, PolaroidPhoto, SpiceMotif, RiverDivider } from '@/components/art/Decoratives'
+import RiverWaveSectionClip from '@/components/art/RiverWaveSectionClip'
 import { foodImages } from '@/app/data/siteContent'
-import { getSectionBottomClipPolygonRem } from '@/lib/riverWave'
 import { useRiverDividerCapRem } from '@/lib/useRiverDividerCapRem'
 
 export default function StorySection() {
   const dividerCapRem = useRiverDividerCapRem()
-  const storyBottomClip = useMemo(
-    () => getSectionBottomClipPolygonRem(dividerCapRem, 'classic'),
-    [dividerCapRem],
-  )
+  const capScale = dividerCapRem / 2.75
 
   return (
     <>
-      <section
-        className="relative bg-parchment py-32 md:py-44 overflow-x-clip overflow-y-visible mb-[-1px]"
-        style={{
-          isolation: 'isolate',
-          WebkitClipPath: storyBottomClip,
-          clipPath: storyBottomClip,
-        }}
+      <RiverWaveSectionClip
+        as="section"
+        edge="top"
+        variant="classic"
+        className="relative isolate mb-[-1px] -mt-[calc(1.375rem+1px)] overflow-x-hidden overflow-y-visible bg-parchment pb-32 pt-20 md:pb-44 md:pt-28 md:-mt-[calc(1.875rem+1px)]"
       >
+        <div
+          className="absolute top-0 left-0 right-0 z-[19] w-full text-[0] leading-[0] pointer-events-none"
+          aria-hidden="true"
+        >
+          <RiverDivider variant="classic" flush />
+        </div>
         <JamdaniPattern id="jamdani-story" />
         <BengaliWatermark text="বাংলা রান্না" className="top-16 right-[4%] rotate-3" />
         <SpiceMotif className="w-36 h-36 top-12 right-[8%] rotate-12 hidden lg:block" />
@@ -35,6 +35,7 @@ export default function StorySection() {
               className="md:col-span-5 border-l-4 border-gold pl-6 md:pl-8 md:mt-8"
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               viewport={{ once: true }}
             >
               <p className="font-serif text-2xl md:text-3xl italic leading-relaxed text-espresso/75">
@@ -45,6 +46,7 @@ export default function StorySection() {
               className="md:col-span-7"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
               viewport={{ once: true }}
             >
               <div className="section-header-texture inline-block pr-3 mb-4">
@@ -64,11 +66,11 @@ export default function StorySection() {
           <BengaliWatermark text="স্বাদ" className="top-[42%] left-[6%] md:top-[48%] -rotate-8" />
           <div className="max-w-5xl mx-auto mt-20 md:mt-28 pt-16 md:pt-20 border-t border-espresso/8">
             <div className="section-header-texture inline-block pr-3 mb-10">
+              <p className="font-hand text-terracotta text-2xl md:text-3xl mb-1 sm:mb-2 -rotate-1 origin-left">
+                From Our Table
+              </p>
               <h2 className="font-serif text-4xl md:text-5xl font-bold tracking-tight text-balance leading-[1.15]">
-                <span className="font-hand text-terracotta text-2xl md:text-3xl font-normal block sm:inline sm:mr-2 mb-1 sm:mb-0 -rotate-1 origin-left">
-                  From Our Table
-                </span>
-                <span className="block sm:inline">A Taste of Home</span>
+                A Taste of Home
               </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 md:gap-4 items-start">
@@ -84,7 +86,7 @@ export default function StorySection() {
             </div>
           </div>
         </div>
-      </section>
+      </RiverWaveSectionClip>
     </>
   )
 }

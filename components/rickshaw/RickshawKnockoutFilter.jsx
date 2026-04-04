@@ -1,13 +1,32 @@
 'use client'
 
 /**
- * Inline SVG filter for the rickshaw video outline. Lives next to the video so
- * `outlineDilateRadius` can change without editing root layout.
+ * SVG filter that knocks out the light background from the rickshaw video.
+ * Uses a non-linear alpha curve to preserve faint lines while killing background.
  */
 export default function RickshawKnockoutFilter({ dilateRadius, filterId = 'rickshaw-knockout-tunable' }) {
-  const r = typeof dilateRadius === 'number' && Number.isFinite(dilateRadius) ? dilateRadius : 0.1
-  /** Two-value form: some engines only apply feMorphology when rx/ry are explicit. */
-  const radiusAttr = `${r} ${r}`
+  const r = typeof dilateRadius === 'number' && Number.isFinite(dilateRadius) ? dilateRadius : 0.85
+
+  // Build an S-curve alpha table based on the slider value
+  // Lower 'r' = stricter (kills more), Higher 'r' = permissive (catches faint lines)
+  // The curve kills pure background but ramps up fast for even slightly dark pixels
+  const threshold = Math.max(0.02, 0.25 - r * 0.08) // where the ramp starts (lower = catches more)
+  
+  // Generate 11-point table: values at alpha = 0, 0.1, 0.2, ... 1.0
+  const points = []
+  for (let i = 0; i <= 10; i++) {
+    const a = i / 10 // input alpha
+    if (a < threshold) {
+      points.push(0) // background: kill it
+    } else if (a < threshold + 0.15) {
+      // Fast ramp from 0 to ~0.8 in the transition zone
+      const t = (a - threshold) / 0.15
+      points.push(Math.min(1, t * t * 0.9)) // quadratic ramp
+    } else {
+      points.push(1) // line art: fully visible
+    }
+  }
+  const tableValues = points.map(v => v.toFixed(3)).join(' ')
 
   return (
     <svg
@@ -19,35 +38,38 @@ export default function RickshawKnockoutFilter({ dilateRadius, filterId = 'ricks
         <filter
           id={filterId}
           colorInterpolationFilters="sRGB"
-          x="-8%"
-          y="-8%"
-          width="116%"
-          height="116%"
+          x="-5%"
+          y="-5%"
+          width="110%"
+          height="110%"
         >
+          {/* Step 1: Gentle contrast boost */}
           <feComponentTransfer in="SourceGraphic" result="crushed">
-            <feFuncR type="linear" slope="1.28" intercept="-0.06" />
-            <feFuncG type="linear" slope="1.28" intercept="-0.06" />
-            <feFuncB type="linear" slope="1.28" intercept="-0.06" />
+            <feFuncR type="linear" slope="1.2" intercept="-0.05" />
+            <feFuncG type="linear" slope="1.2" intercept="-0.05" />
+            <feFuncB type="linear" slope="1.2" intercept="-0.05" />
           </feComponentTransfer>
+
+          {/* Step 2: Luminance to alpha */}
           <feColorMatrix
             in="crushed"
             type="matrix"
             values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -0.2126 -0.7152 -0.0722 0 1"
             result="knockout"
           />
-          <feComponentTransfer in="knockout" result="alphaLifted">
-            <feFuncA type="linear" slope="2.55" intercept="-0.18" />
+
+          {/* Step 3: S-curve alpha — kills flat background, preserves faint lines */}
+          <feComponentTransfer in="knockout" result="shaped">
+            <feFuncA type="table" tableValues={tableValues} />
           </feComponentTransfer>
-          <feMorphology in="alphaLifted" operator="dilate" radius={radiusAttr} result="spread" />
+
+          {/* Step 4: Lighter warm brown ink, semi-transparent */}
           <feColorMatrix
-            in="spread"
+            in="shaped"
             type="matrix"
-            values="0.5 0 0 0 0.18  0 0.44 0 0 0.12  0 0 0.38 0 0.1  0 0 0 1 0"
+            values="0 0 0 0 0.32  0 0 0 0 0.24  0 0 0 0 0.18  0 0 0 0.6 0"
             result="inked"
           />
-          <feComponentTransfer in="inked" result="rickshawFinal">
-            <feFuncA type="linear" slope="1.04" intercept="-0.02" />
-          </feComponentTransfer>
         </filter>
       </defs>
     </svg>

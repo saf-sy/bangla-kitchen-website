@@ -20,12 +20,8 @@ import {
   RickshawPinIcon,
   RiverDivider,
 } from '@/components/art/Decoratives'
-import {
-  getContactTopWaveClipPolygonRem,
-  getRiverWaveFillCapPathDForVariant,
-  getSectionBottomClipPolygonRem,
-  getSectionTopWaveClipPolygonRem,
-} from '@/lib/riverWave'
+import RiverWaveSectionClip from '@/components/art/RiverWaveSectionClip'
+import { getRiverWaveFillCapPathDForVariant } from '@/lib/riverWave'
 import {
   mergeRickshawTuning,
   readRickshawTuningFromStorage,
@@ -41,6 +37,35 @@ const FOOTER_LOGO_INNER_SCALE = 1.14
 
 const PARCHMENT_FILL = '#FBF7E9'
 const ESPRESSO_FILL = '#2B1E16'
+
+const HERO_MARQUEE_PHRASE =
+  'AUTHENTIC BANGLADESHI SOUL FOOD • EST. IN HOUSTON • FAMILY RECIPES • HANDCRAFTED MISHTI • 100% HALAL •'
+
+export function HeroMarqueeStrip() {
+  return (
+    <>
+      <p className="sr-only">
+        Authentic Bangladeshi soul food, established in Houston, family recipes, handcrafted mishti, one hundred
+        percent halal.
+      </p>
+      <div
+        className="relative z-10 w-screen left-1/2 -translate-x-1/2 overflow-hidden border-y border-gold/15 bg-espresso py-3 md:py-3.5"
+        aria-hidden="true"
+      >
+        <div className="flex w-max animate-marquee">
+          {[0, 1].map((dup) => (
+            <span
+              key={dup}
+              className="flex shrink-0 items-center px-8 md:px-14 text-parchment/40 text-xs sm:text-sm md:text-base font-bold tracking-[0.22em] uppercase"
+            >
+              {HERO_MARQUEE_PHRASE}
+            </span>
+          ))}
+        </div>
+      </div>
+    </>
+  )
+}
 
 /* Brand marks from Simple Icons (MIT) — files in /public/images/ */
 function DeliveryPlatformIcon({ icon, name }) {
@@ -86,77 +111,21 @@ function DeliveryPlatformIcon({ icon, name }) {
 
 const RICKSHAW_FILTER_ID = 'rickshaw-knockout-tunable'
 
-function scrubRickshawVideoFromX(video, latest, travelStart, travelEnd) {
-  if (!video) return
-  const d = video.duration
-  if (!Number.isFinite(d) || d <= 0) return
-  const n =
-    typeof latest === 'number'
-      ? latest
-      : parseFloat(String(latest).replace('%', ''))
-  if (!Number.isFinite(n)) return
-  const span = travelEnd - travelStart
-  if (span <= 0) return
-  const p = Math.min(1, Math.max(0, (n - travelStart) / span))
-  video.pause()
-  const t = p * d
-  if (Math.abs(video.currentTime - t) > 1 / 60) {
-    try {
-      video.currentTime = t
-    } catch {
-      /* seek before buffer ready */
-    }
-  }
-}
+// Replaced video scrubbing with smooth playback
 
 export default function CateringSection() {
   const [footerLogoError, setFooterLogoError] = useState(false)
   const dividerCapRem = useRiverDividerCapRem()
-  const deliveryTopClipPath = useMemo(
-    () => getSectionTopWaveClipPolygonRem(dividerCapRem, 'swell'),
-    [dividerCapRem],
-  )
-  const cateringBottomClipPath = useMemo(
-    () => getSectionBottomClipPolygonRem(dividerCapRem, 'classic'),
-    [dividerCapRem],
-  )
-  const contactClipPath = useMemo(
-    () => getContactTopWaveClipPolygonRem(dividerCapRem),
-    [dividerCapRem],
-  )
+  const capScale = dividerCapRem / 2.75
   const swellWaveFillD = useMemo(() => getRiverWaveFillCapPathDForVariant('swell', 60, 96), [])
   const classicWaveFillD = useMemo(() => getRiverWaveFillCapPathDForVariant('classic', 60, 96), [])
-  const deliveryClipStyle = useMemo(
-    () => ({
-      isolation: 'isolate',
-      WebkitClipPath: deliveryTopClipPath,
-      clipPath: deliveryTopClipPath,
-    }),
-    [deliveryTopClipPath],
-  )
-  const cateringClipStyle = useMemo(
-    () => ({
-      isolation: 'isolate',
-      WebkitClipPath: cateringBottomClipPath,
-      clipPath: cateringBottomClipPath,
-    }),
-    [cateringBottomClipPath],
-  )
-  const contactClipStyle = useMemo(
-    () => ({
-      isolation: 'isolate',
-      WebkitClipPath: contactClipPath,
-      clipPath: contactClipPath,
-    }),
-    [contactClipPath],
-  )
   const [rickshawTuning, setRickshawTuning] = useState(() => mergeRickshawTuning())
   const prefersReducedMotion = useReducedMotion()
   const rickshawRowRef = useRef(null)
   const rickshawVideoRef = useRef(null)
   const rickshawAnimRef = useRef(null)
   const rickshawX = useMotionValue(`${RICKSHAW_TUNING_DEFAULTS.travelStartPercent}%`)
-  const rickshawInView = useInView(rickshawRowRef, { once: true, amount: 0.22 })
+  const rickshawInView = useInView(rickshawRowRef, { once: true, amount: 0.05 })
   const rickshawTuningRef = useRef(rickshawTuning)
   rickshawTuningRef.current = rickshawTuning
 
@@ -167,10 +136,7 @@ export default function CateringSection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- once on mount; rickshawX is stable
   }, [])
 
-  useMotionValueEvent(rickshawX, 'change', (latest) => {
-    const t = rickshawTuningRef.current
-    scrubRickshawVideoFromX(rickshawVideoRef.current, latest, t.travelStartPercent, t.travelEndPercent)
-  })
+  // No longer scrubbing video tied to MotionValue to ensure smoother framerates
 
   const {
     travelStartPercent: rsStart,
@@ -200,6 +166,14 @@ export default function CateringSection() {
     if (v && v.readyState >= 1) {
       try {
         v.currentTime = 0
+        v.play()
+        
+        // Play ring ring sound once
+        const bell = new Audio('https://actions.google.com/sounds/v1/alarms/bicycle_bell.ogg')
+        bell.volume = 0.85
+        bell.play().catch(() => {
+          console.log('Autoplay blocked: rickshaw entered but user hasn\'t interacted with the page yet.')
+        })
       } catch {
         /* not seekable yet */
       }
@@ -207,7 +181,10 @@ export default function CateringSection() {
 
     rickshawAnimRef.current = animate(rickshawX, endPct, {
       duration: rsDuration,
-      ease: [0, 0, 0.2, 1],
+      ease: "easeOut",
+      onComplete: () => {
+        if (v) v.pause()
+      }
     })
 
     return () => {
@@ -218,7 +195,14 @@ export default function CateringSection() {
 
   return (
     <>
-      <div className="relative -mt-[calc(2.75rem+2px)] md:-mt-[calc(3.75rem+2px)] z-[1] bg-parchment">
+      <RiverWaveSectionClip
+        as="section"
+        id="delivery"
+        edge="top"
+        variant="swell"
+        capScale={capScale}
+        className="relative isolate z-[1] overflow-x-hidden overflow-y-visible bg-parchment py-32 md:py-40 -mt-[calc(2.75rem+2px)] md:-mt-[calc(3.75rem+2px)]"
+      >
         <div
           className="pointer-events-none absolute top-0 left-0 right-0 z-[19] h-11 md:h-[3.75rem] text-[0] leading-[0]"
           aria-hidden="true"
@@ -234,11 +218,6 @@ export default function CateringSection() {
         <div className="pointer-events-none absolute top-0 left-0 right-0 z-20 text-[0] leading-[0]">
           <RiverDivider variant="swell" flush />
         </div>
-        <section
-          id="delivery"
-          className="bg-parchment py-32 md:py-40 relative overflow-x-clip overflow-y-visible z-[1]"
-          style={deliveryClipStyle}
-        >
         <BengaliWatermark text="ডেলিভারি" className="top-14 right-[4%] -rotate-4" />
         <div className="max-w-5xl mx-auto px-8 md:px-10">
           <div className="section-header-texture inline-block pr-3 mb-4">
@@ -254,12 +233,12 @@ export default function CateringSection() {
                 href={platform.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`group block bg-polaroid border border-espresso/8 p-8 md:p-10 shadow-lg shadow-espresso/5 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ${platform.className}`}
+                className={`group block bg-polaroid border border-espresso/8 p-8 md:p-10 shadow-lg shadow-espresso/5 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out ${platform.className}`}
               >
                 <div className="mb-4">
                   <DeliveryPlatformIcon icon={platform.icon} name={platform.name} />
                 </div>
-                <h3 className="font-serif text-2xl md:text-3xl font-bold mb-3 group-hover:text-terracotta transition-colors tracking-tight">{platform.name}</h3>
+                <h3 className="font-serif text-2xl md:text-3xl font-bold mb-3 group-hover:text-terracotta transition-colors duration-300 ease-out tracking-tight">{platform.name}</h3>
                 <p className="text-espresso/50 mb-5">{platform.description}</p>
                 <span className="inline-flex items-center gap-1.5 text-terracotta font-bold text-sm tracking-wide">Order Now <ExternalLink size={14} /></span>
               </a>
@@ -268,27 +247,37 @@ export default function CateringSection() {
 
           <div
             ref={rickshawRowRef}
-            className="relative isolate z-[2] mt-10 min-h-[11rem] overflow-x-clip overflow-y-visible bg-parchment pb-2 pt-5 md:min-h-[15rem] md:pt-7 pointer-events-none text-espresso"
+            className="relative isolate z-[2] mt-10 h-[18rem] md:h-[24rem] overflow-visible bg-parchment pb-2 pt-5 pointer-events-none text-espresso w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)]"
           >
             <RickshawKnockoutFilter
               key={rickshawTuning.outlineDilateRadius}
               dilateRadius={rickshawTuning.outlineDilateRadius}
               filterId={RICKSHAW_FILTER_ID}
             />
-            <div className="absolute inset-x-0 bottom-2 border-b border-dashed border-espresso/45" />
+            <div className="absolute inset-x-0 bottom-2 md:bottom-4 border-b border-dashed border-espresso/45" />
             <motion.div
-              className="absolute bottom-0 left-0 will-change-transform"
+              className="absolute bottom-2 md:bottom-4 left-0 will-change-transform pointer-events-auto cursor-pointer"
               style={{ x: rickshawX }}
               aria-hidden="true"
+              onPointerEnter={() => {
+                const bell = new Audio('https://actions.google.com/sounds/v1/alarms/bicycle_bell.ogg')
+                bell.volume = 0.85
+                bell.play().catch(() => {})
+              }}
+              onClick={() => {
+                const bell = new Audio('https://actions.google.com/sounds/v1/alarms/bicycle_bell.ogg')
+                bell.volume = 1.0
+                bell.play().catch(() => {})
+              }}
             >
               <div
-                className="isolate h-[12.5rem] w-max overflow-hidden md:h-[16.5rem] [clip-path:inset(0_32px_0_20px)] [-webkit-clip-path:inset(0_32px_0_20px)] md:[clip-path:inset(0_40px_0_22px)] md:[-webkit-clip-path:inset(0_40px_0_22px)]"
+                className="isolate h-[18rem] w-max overflow-visible md:h-[24rem] [clip-path:inset(0_32px_0_20px)] [-webkit-clip-path:inset(0_32px_0_20px)] md:[clip-path:inset(0_40px_0_22px)] md:[-webkit-clip-path:inset(0_40px_0_22px)]"
               >
                 <video
                   ref={rickshawVideoRef}
-                  className="pointer-events-none h-full w-auto min-w-[280px] max-w-none origin-left scale-[1.04] md:scale-[1.08]"
+                  className="pointer-events-none h-full w-auto min-w-[280px] max-w-none origin-bottom scale-100"
                   style={{
-                    filter: `url(#${RICKSHAW_FILTER_ID}) contrast(1.38) brightness(0.94)`,
+                    filter: `url(#${RICKSHAW_FILTER_ID}) drop-shadow(0px 0px 0.5px rgba(43,30,22,0.6))`,
                   }}
                   src="/textures/rickshaw-driving-transparent.mp4"
                   width={360}
@@ -301,13 +290,13 @@ export default function CateringSection() {
             </motion.div>
           </div>
         </div>
-        </section>
-      </div>
+      </RiverWaveSectionClip>
+
+      <HeroMarqueeStrip />
 
       <section
         id="catering"
-        className="py-32 md:py-44 relative overflow-x-clip overflow-y-visible mb-[-1px]"
-        style={cateringClipStyle}
+        className="relative isolate mb-[-1px] overflow-x-hidden overflow-y-visible py-32 md:py-44"
       >
         <JamdaniPattern id="jamdani-catering" />
         <BengaliWatermark text="আপ্যায়ন" className="top-8 left-[6%] rotate-5" />
@@ -335,7 +324,14 @@ export default function CateringSection() {
         </div>
       </section>
 
-      <div className="relative -mt-[calc(2.75rem+2px)] md:-mt-[calc(3.75rem+2px)] bg-espresso">
+      <RiverWaveSectionClip
+        as="footer"
+        id="contact"
+        edge="top"
+        variant="classic"
+        capScale={capScale}
+        className="relative isolate overflow-x-hidden overflow-y-visible bg-espresso pb-32 pt-0 text-parchment md:pb-24 -mt-[calc(2.75rem+2px)] md:-mt-[calc(3.75rem+2px)]"
+      >
         <div
           className="pointer-events-none absolute top-0 left-0 right-0 z-[19] h-11 md:h-[3.75rem] text-[0] leading-[0]"
           aria-hidden="true"
@@ -351,11 +347,6 @@ export default function CateringSection() {
         <div className="pointer-events-none absolute top-0 left-0 right-0 z-20 text-[0] leading-[0]">
           <RiverDivider flush />
         </div>
-        <footer
-          id="contact"
-          className="bg-espresso text-parchment overflow-x-clip overflow-y-visible pt-0 pb-32 md:pb-24 relative"
-          style={contactClipStyle}
-        >
         <div
           className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none"
           style={{
@@ -365,16 +356,18 @@ export default function CateringSection() {
           }}
         />
         <div className="max-w-5xl mx-auto px-8 md:px-10 relative z-10 pt-12 md:pt-16">
-          <div className="grid md:grid-cols-12 gap-8 md:gap-8 items-start">
-            <div className="md:col-span-4">
-              <div className="section-header-texture inline-block pr-2 mb-0">
-                <p className="font-hand text-gold text-lg md:text-xl mb-0.5 -rotate-1">Visit Us</p>
-                <h2 className="font-serif text-3xl md:text-4xl font-bold text-parchment tracking-tight leading-tight">
-                  Come Say Hello
-                </h2>
-              </div>
-            </div>
-            <div className="md:col-span-4">
+          {/* Footer Header */}
+          <div className="section-header-texture inline-block pr-2 mb-10">
+            <p className="font-hand text-gold text-lg md:text-xl mb-0.5 -rotate-1">Visit Us</p>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-parchment tracking-tight leading-tight">
+              Come Say Hello
+            </h2>
+          </div>
+
+          {/* 3 Even Columns */}
+          <div className="grid md:grid-cols-3 gap-10 md:gap-12 items-start">
+            {/* Column 1: Address */}
+            <div>
               <div className="flex items-center gap-2 mb-2">
                 <RickshawPinIcon className="w-3.5 h-3.5 text-gold shrink-0" />
                 <h3 className="font-bold text-[10px] uppercase tracking-[0.18em] text-parchment/50">Find Us</h3>
@@ -384,21 +377,50 @@ export default function CateringSection() {
                 href={contacts.mapHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 mt-2 text-gold text-xs font-bold hover:underline"
+                className="inline-flex items-center gap-1 mt-2 text-gold text-xs font-bold hover:underline transition-colors duration-300 ease-out"
               >
                 Get Directions <ExternalLink size={11} />
               </a>
             </div>
-            <div className="md:col-span-4">
+
+            {/* Column 2: Hours */}
+            <div>
+              <div className="flex items-center gap-1.5 mb-3">
+                <RickshawClockIcon className="w-3.5 h-3.5 text-gold" />
+                <h3 className="font-bold text-[10px] uppercase tracking-[0.18em] text-parchment/50">Hours</h3>
+              </div>
+              <table className="w-full text-sm">
+                <tbody>
+                  {contacts.hours.map((entry) => {
+                    const isToday = new Date().toLocaleDateString('en-US', { weekday: 'long' }) === entry.day
+                    const isClosed = entry.time === 'Closed'
+                    return (
+                      <tr key={entry.day} className={`border-b border-parchment/8 last:border-0 ${isToday ? 'text-gold' : ''}`}>
+                        <td className={`py-1.5 pr-4 font-semibold text-xs tracking-wide ${isToday ? 'text-gold' : 'text-parchment/60'}`}>
+                          {entry.day}
+                          {isToday && <span className="ml-1.5 text-[9px] font-bold uppercase text-gold/70">Today</span>}
+                        </td>
+                        <td className={`py-1.5 text-right text-xs tabular-nums ${isClosed ? 'text-terracotta/70 font-bold' : isToday ? 'text-gold font-semibold' : 'text-parchment/50'}`}>
+                          {entry.time}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Column 3: Call Us */}
+            <div>
               <div className="flex items-center gap-2 mb-2">
                 <RickshawPhoneIcon className="w-3.5 h-3.5 text-gold shrink-0" />
                 <h3 className="font-bold text-[10px] uppercase tracking-[0.18em] text-parchment/50">Call Us</h3>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div>
                   <a
                     href={contacts.restaurantPhoneHref}
-                    className="text-parchment/80 hover:text-gold transition-colors text-base font-semibold leading-none"
+                    className="text-parchment/80 hover:text-gold transition-colors duration-300 ease-out text-base font-semibold leading-none"
                   >
                     {contacts.restaurantPhone}
                   </a>
@@ -407,85 +429,51 @@ export default function CateringSection() {
                 <div>
                   <a
                     href={contacts.cateringPhoneHref}
-                    className="text-parchment/80 hover:text-gold transition-colors text-base font-semibold leading-none"
+                    className="text-parchment/80 hover:text-gold transition-colors duration-300 ease-out text-base font-semibold leading-none"
                   >
                     {contacts.cateringPhone}
                   </a>
                   <p className="text-parchment/35 text-[10px] mt-0.5">Catering</p>
                 </div>
               </div>
-              <div className="mt-3 pt-3 border-t border-parchment/10">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <RickshawClockIcon className="w-3 h-3 text-gold" />
-                  <span className="text-[10px] uppercase tracking-[0.18em] text-parchment/40 font-bold">Hours</span>
-                </div>
-                <p className="text-parchment/65 text-xs">
-                  Daily · <span className="font-semibold text-parchment/85">11 AM — 10 PM</span>
-                </p>
-              </div>
             </div>
           </div>
 
           <div className="mt-10 md:mt-12 pt-8 border-t border-parchment/15">
-            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 lg:gap-8">
-              <div>
-                <p className="font-hand text-gold text-xl md:text-2xl leading-tight">বাংলাদেশ থেকে ভালোবাসায়</p>
-                <p className="font-serif italic text-parchment/40 text-sm mt-0.5 tracking-[0.02em]">
-                  From Bangladesh, with love.
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-8">
-                <div className="flex items-start gap-3">
-                  {!footerLogoError ? (
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-gold/40 bg-parchment/10 p-0.5 shadow-md shadow-black/15 sm:h-12 sm:w-12 sm:p-1">
-                      <Image
-                        src="/textures/bangla-kitchen-logo.png"
-                        alt="Bangla Kitchen"
-                        width={48}
-                        height={48}
-                        className="h-full w-full object-contain"
-                        style={{ transform: `scale(${FOOTER_LOGO_INNER_SCALE})`, transformOrigin: 'center center' }}
-                        loading="lazy"
-                        onError={() => setFooterLogoError(true)}
-                      />
-                    </span>
-                  ) : (
-                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-gold/40 bg-parchment/10 font-serif font-bold text-sm text-gold sm:h-12 sm:w-12">
-                      BK
-                    </span>
-                  )}
-                  <div>
-                    <p className="font-serif text-base md:text-lg font-bold text-parchment tracking-tight leading-tight">
-                      Bangla Kitchen &amp; Sweets
-                    </p>
-                    <p className="text-parchment/40 text-xs mt-0.5 leading-snug tracking-wide">
-                      Home-style Bangladeshi food in Sugar Land, TX.
-                    </p>
-                  </div>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+              <div className="flex items-center gap-3">
+                {!footerLogoError ? (
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-gold/40 shadow-md shadow-black/15 sm:h-12 sm:w-12">
+                    <Image
+                      src="/textures/bangla-kitchen-logo.png"
+                      alt="Bangla Kitchen"
+                      width={48}
+                      height={48}
+                      className="h-full w-full object-contain"
+                      style={{ transform: `scale(${FOOTER_LOGO_INNER_SCALE})`, transformOrigin: 'center center' }}
+                      loading="lazy"
+                      onError={() => setFooterLogoError(true)}
+                    />
+                  </span>
+                ) : (
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-gold/40 bg-parchment/10 font-serif font-bold text-sm text-gold sm:h-12 sm:w-12">
+                    BK
+                  </span>
+                )}
+                <div>
+                  <p className="font-hand text-gold text-lg leading-tight">বাংলাদেশ থেকে ভালোবাসায়</p>
+                  <p className="font-serif italic text-parchment/40 text-xs mt-0.5 tracking-[0.02em]">
+                    From Bangladesh, with love.
+                  </p>
                 </div>
-                <nav
-                  className="flex flex-wrap gap-x-5 gap-y-1.5 sm:justify-end"
-                  aria-label="Quick links"
-                >
-                  {['Menu', 'Delivery', 'Catering', 'Contact'].map((l) => (
-                    <a
-                      key={l}
-                      href={`#${l.toLowerCase()}`}
-                      className="text-parchment/45 hover:text-gold font-semibold transition-colors text-xs"
-                    >
-                      {l}
-                    </a>
-                  ))}
-                </nav>
               </div>
+              <p className="text-[10px] text-parchment/30 tracking-[0.08em]">
+                © {new Date().getFullYear()} Bangla Kitchen &amp; Sweets. All rights reserved.
+              </p>
             </div>
-            <p className="mt-6 pt-5 border-t border-parchment/10 text-[10px] text-parchment/30 tracking-[0.08em]">
-              © {new Date().getFullYear()} Bangla Kitchen &amp; Sweets. All rights reserved.
-            </p>
           </div>
         </div>
-        </footer>
-      </div>
+      </RiverWaveSectionClip>
 
       <RickshawTunerPanel tuning={rickshawTuning} setTuning={setRickshawTuning} />
 

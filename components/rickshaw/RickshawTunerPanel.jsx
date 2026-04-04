@@ -91,12 +91,12 @@ export default function RickshawTunerPanel({ tuning, setTuning }) {
       </label>
 
       <label className="mb-2 block text-[10px] font-semibold uppercase tracking-wide text-parchment/55">
-        Outline thickness ({tuning.outlineDilateRadius.toFixed(2)})
+        Line darkness ({tuning.outlineDilateRadius.toFixed(2)})
         <input
           type="range"
-          min={0.02}
-          max={0.28}
-          step={0.01}
+          min={0.1}
+          max={3.0}
+          step={0.05}
           value={tuning.outlineDilateRadius}
           onChange={(e) => patch({ outlineDilateRadius: Number(e.target.value) })}
           className="mt-1 w-full accent-gold"

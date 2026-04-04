@@ -1,64 +1,15 @@
 'use client'
 
-import { useMemo } from 'react'
 import { ChevronRight } from 'lucide-react'
-import { RiverDivider, SmartFoodImage, VintageStamp } from '@/components/art/Decoratives'
+import { RiverDivider, SmartFoodImage, VintageStamp, FloralMotif, SpiceMotif } from '@/components/art/Decoratives'
 import { contacts } from '@/app/data/siteContent'
-import { getHeroRiverClipPolygon, getHeroRiverMaskSvgDataUri, getSectionBottomClipPolygonRem } from '@/lib/riverWave'
-import { useRiverDividerCapRem } from '@/lib/useRiverDividerCapRem'
-
-const HERO_MARQUEE_PHRASE =
-  'AUTHENTIC BANGLADESHI SOUL FOOD • EST. IN HOUSTON • FAMILY RECIPES • HANDCRAFTED MISHTI • 100% HALAL •'
-
-function HeroMarqueeStrip() {
-  return (
-    <>
-      <p className="sr-only">
-        Authentic Bangladeshi soul food, established in Houston, family recipes, handcrafted mishti, one hundred
-        percent halal.
-      </p>
-      <div
-        className="relative z-10 mt-10 w-screen left-1/2 -translate-x-1/2 overflow-hidden border-y border-gold/15 bg-espresso py-3 md:py-3.5 lg:mt-14"
-        aria-hidden="true"
-      >
-        <div className="flex w-max animate-marquee">
-          {[0, 1].map((dup) => (
-            <span
-              key={dup}
-              className="flex shrink-0 items-center px-8 md:px-14 text-parchment/40 text-xs sm:text-sm md:text-base font-bold tracking-[0.22em] uppercase"
-            >
-              {HERO_MARQUEE_PHRASE}
-            </span>
-          ))}
-        </div>
-      </div>
-    </>
-  )
-}
 
 export default function HeroSection() {
-  const dividerCapRem = useRiverDividerCapRem()
-  const heroRiverMaskUrl = useMemo(() => getHeroRiverMaskSvgDataUri(), [])
-  const heroRiverClip = useMemo(() => getHeroRiverClipPolygon(), [])
-  const heroSectionClip = useMemo(
-    () => getSectionBottomClipPolygonRem(dividerCapRem, 'classic'),
-    [dividerCapRem],
-  )
-
   const heroBtnClass =
     'inline-flex h-14 flex-1 min-w-0 items-center justify-center gap-2 px-4 sm:px-6 text-sm sm:text-base font-bold tracking-wide transition-all duration-300'
 
   return (
-    <section
-      className="hero-vintage-map relative pt-40 md:pt-48 pb-0 mb-[-1px]"
-      style={{
-        isolation: 'isolate',
-        overflowX: 'clip',
-        overflowY: 'visible',
-        WebkitClipPath: heroSectionClip,
-        clipPath: heroSectionClip,
-      }}
-    >
+    <section className="hero-vintage-map relative overflow-x-visible overflow-y-visible pt-40 md:pt-48 pb-0 mb-[-1px]">
       <span className="hero-dhaka-watermark select-none" aria-hidden="true">
         ঢাকা
       </span>
@@ -70,7 +21,7 @@ export default function HeroSection() {
             'radial-gradient(ellipse at 10% 30%, rgba(212,175,55,0.18), transparent 45%), radial-gradient(ellipse at 70% 5%, rgba(139,26,26,0.08), transparent 35%)',
         }}
       />
-      <div className="max-w-[90rem] mx-auto px-8 md:px-10 lg:px-12 relative z-10">
+      <div className="relative z-10 mx-auto max-w-[90rem] overflow-x-clip px-8 md:px-10 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:items-stretch gap-10 lg:gap-14 xl:gap-16">
           <div className="lg:pr-4 xl:pr-8">
             <p className="font-hand text-terracotta text-2xl md:text-3xl mb-1 -rotate-2 origin-left">A Taste of Dhaka</p>
@@ -101,23 +52,25 @@ export default function HeroSection() {
             </div>
           </div>
 
-          <div className="relative flex flex-col items-center overflow-visible lg:self-stretch lg:items-end lg:justify-end">
-            <div className="relative w-full max-w-[min(100%,520px)] lg:max-w-none lg:w-full">
-              <div
-                className="hero-food-frame hero-food-frame--wave-mask mughal-arch mughal-frame relative shadow-2xl shadow-espresso/25 min-h-[380px] h-[min(52vh,480px)] sm:min-h-[420px] sm:h-[min(58vh,520px)] md:h-[min(64vh,600px)] lg:h-[min(72vh,680px)] xl:h-[min(78vh,760px)]"
-                style={{
-                  WebkitMaskImage: heroRiverMaskUrl,
-                  maskImage: heroRiverMaskUrl,
-                  WebkitMaskSize: '100% 100%',
-                  maskSize: '100% 100%',
-                  WebkitMaskRepeat: 'no-repeat',
-                  maskRepeat: 'no-repeat',
-                  WebkitMaskPosition: 'center',
-                  maskPosition: 'center',
-                  WebkitClipPath: heroRiverClip,
-                  clipPath: heroRiverClip,
-                }}
-              >
+          <div className="relative flex flex-col items-center justify-center lg:items-end lg:justify-end mt-12 lg:mt-0">
+            <div className="relative w-full max-w-[min(100%,480px)] lg:max-w-[460px] mx-auto lg:mx-0">
+              
+              {/* Offset Decorative Background Frame */}
+              <div 
+                className="absolute inset-0 translate-x-3 translate-y-4 md:translate-x-6 md:translate-y-6 rounded-2xl border border-gold/60 bg-parchment/40 backdrop-blur-sm" 
+                aria-hidden="true" 
+              />
+              
+              {/* Traditional Motifs */}
+              <FloralMotif 
+                className="absolute -top-10 -right-8 w-24 h-24 md:w-32 md:h-32 rotate-[15deg] opacity-60 z-0 origin-center text-espresso pointer-events-none" 
+              />
+              <SpiceMotif 
+                className="absolute -bottom-10 -right-4 w-20 h-20 md:w-28 md:h-28 rotate-[-20deg] opacity-40 z-0 origin-center text-terracotta pointer-events-none" 
+              />
+
+              {/* The Main Image */}
+              <div className="relative z-10 overflow-hidden rounded-2xl shadow-2xl shadow-espresso/40 ring-1 ring-espresso/10 aspect-[4/5] w-full">
                 <SmartFoodImage
                   src="https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=1200&q=80"
                   alt="Dhakaiya Kacchi Biryani — Bangla Kitchen signature dish"
@@ -127,7 +80,9 @@ export default function HeroSection() {
                   priority
                 />
               </div>
-              <div className="absolute z-20 left-[2%] bottom-0 md:left-0 lg:left-2 xl:left-4 drop-shadow-lg">
+
+              {/* The Vintage Badge */}
+              <div className="absolute z-20 top-10 -left-6 md:top-16 md:-left-12 drop-shadow-2xl hover:-rotate-6 hover:scale-105 transition-all duration-500 origin-center">
                 <VintageStamp />
               </div>
             </div>
@@ -135,11 +90,7 @@ export default function HeroSection() {
         </div>
       </div>
 
-      <HeroMarqueeStrip />
 
-      <div className="text-[0] leading-[0] -mt-px relative z-[2]" aria-hidden="true">
-        <RiverDivider flush />
-      </div>
     </section>
   )
 }

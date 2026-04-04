@@ -1,40 +1,36 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import {
   BengaliWatermark,
   FloralMotif,
   JamdaniPattern,
-  RiverWaveTopCap,
+  RiverDivider,
   SpiceMotif,
 } from '@/components/art/Decoratives'
 import { categories, menuData } from '@/app/data/siteContent'
-import { getSectionBottomClipPolygonRem } from '@/lib/riverWave'
+import RiverWaveSectionClip from '@/components/art/RiverWaveSectionClip'
 import { useRiverDividerCapRem } from '@/lib/useRiverDividerCapRem'
 
 export default function MenuSection() {
   const [activeCategory, setActiveCategory] = useState('Appetizers')
   const dividerCapRem = useRiverDividerCapRem()
-  const menuBottomClip = useMemo(
-    () => getSectionBottomClipPolygonRem(dividerCapRem, 'swell'),
-    [dividerCapRem],
-  )
+  const capScale = dividerCapRem / 2.75
 
   return (
-    <section
+    <RiverWaveSectionClip
+      as="section"
       id="menu"
-      className="menu-ledger-bg menu-with-river-cap bg-parchment relative overflow-x-clip overflow-y-visible pb-32 md:pb-44 pt-0 -mt-[calc(2.75rem+2px)] md:-mt-[calc(3.75rem+2px)] mb-[-1px]"
-      style={{
-        isolation: 'isolate',
-        WebkitClipPath: menuBottomClip,
-        clipPath: menuBottomClip,
-      }}
+      edge="top"
+      variant="swell"
+      capScale={capScale}
+      className="menu-ledger-bg menu-with-river-cap relative isolate mb-[-1px] -mt-[calc(2.75rem+2px)] overflow-x-hidden overflow-y-visible bg-parchment pb-32 md:pb-44 pt-0 md:-mt-[calc(3.75rem+2px)]"
     >
       <div
-        className="relative z-[4] w-full text-[0] leading-[0] pointer-events-none -mb-0.5 md:-mb-[3px]"
+        className="absolute top-0 left-0 right-0 z-[19] w-full text-[0] leading-[0] pointer-events-none"
         aria-hidden="true"
       >
-        <RiverWaveTopCap />
+        <RiverDivider variant="swell" flush />
       </div>
       <JamdaniPattern id="jamdani-menu" />
       <BengaliWatermark text="মেনু" className="top-10 right-[8%] rotate-6" />
@@ -56,7 +52,7 @@ export default function MenuSection() {
               key={cat}
               type="button"
               onClick={() => setActiveCategory(cat)}
-              className={`menu-category-tab px-5 py-2.5 text-sm font-bold rounded-[2px] outline-none transition-[color,background-color,border-color] duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta/60 ${
+              className={`menu-category-tab px-5 py-2.5 text-sm font-bold rounded-[2px] outline-none transition-[color,background-color,border-color] duration-300 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta/60 ${
                 activeCategory === cat
                   ? 'border-terracotta bg-terracotta text-white'
                   : 'bg-transparent text-espresso/55 hover:border-espresso/30 hover:bg-[rgba(43,30,22,0.05)] hover:text-espresso'
@@ -78,24 +74,33 @@ export default function MenuSection() {
             {menuData[activeCategory].map((item, idx) => (
               <li
                 key={item.name}
-                className={`menu-row flex items-start py-4 border-b border-dashed border-espresso/12 last:border-0 group ${idx % 2 === 1 ? 'menu-row--alt' : ''}`}
+                className={`menu-row flex flex-col py-4 px-2 border-b border-dashed border-espresso/12 last:border-0 group ${idx % 2 === 1 ? 'menu-row--alt' : ''}`}
               >
-                <div className="basis-[56%] min-w-0 pr-3">
-                  <span className="ink-bleed font-semibold text-espresso group-hover:text-terracotta transition-colors">{item.name}</span>
-                  {item.desc && <span className="block text-sm text-espresso/40 mt-0.5 italic">{item.desc}</span>}
-                  {item.note && <span className="inline-block ml-2 font-hand text-terracotta text-sm">— {item.note}</span>}
-                </div>
-                <span className="menu-leader mt-2.5" />
-                <div className="flex items-center gap-1.5 pt-0.5">
-                  <span className="menu-item-price flex-shrink-0 font-serif font-bold text-terracotta text-lg leading-none">
+                <div className="flex items-baseline w-full">
+                  <div className="shrink-0">
+                    <span className="ink-bleed font-semibold text-espresso group-hover:text-terracotta transition-colors duration-300 ease-out text-lg tracking-tight">
+                      {item.name}
+                    </span>
+                    {item.note && <span className="inline-block ml-2 font-hand text-terracotta text-sm normal-case font-normal">— {item.note}</span>}
+                  </div>
+                  
+                  <span className="menu-leader mx-3" />
+                  
+                  <span className="menu-item-price flex-shrink-0 font-serif font-bold text-terracotta text-lg md:text-xl leading-none">
                     {item.price}
                   </span>
                 </div>
+                
+                {item.desc && (
+                  <span className="block text-sm md:text-[0.95rem] text-espresso/60 mt-1.5 italic pr-16 md:pr-24 leading-relaxed">
+                    {item.desc}
+                  </span>
+                )}
               </li>
             ))}
           </ul>
         </div>
       </div>
-    </section>
+    </RiverWaveSectionClip>
   )
 }

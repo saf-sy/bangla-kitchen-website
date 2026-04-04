@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "clean": "node -e \"try{require('fs').rmSync('.next',{recursive:true,force:true})}catch(e){}\"",
+    "dev": "npm run clean && next dev -p 3000",
+    "dev:fast": "next dev -p 3000",
     "dev:3010": "next dev -p 3010",
     "dev:3020": "next dev -p 3020",
     "open:site": "start http://127.0.0.1:3000/",

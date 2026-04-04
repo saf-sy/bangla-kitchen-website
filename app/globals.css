@@ -478,3 +478,9 @@ button.menu-category-tab {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 32' preserveAspectRatio='none'%3E%3Cpath d='M0 32 Q20 14 50 24 Q75 32 100 22 Q130 10 160 26 Q185 32 210 20 Q240 8 270 24 Q300 32 330 18 Q355 10 380 22 Q410 30 440 16 Q465 8 490 24 Q520 32 550 20 Q580 10 610 26 Q640 32 670 18 Q695 12 720 24 Q750 32 780 20 Q810 8 840 26 Q870 32 900 16 Q925 10 950 22 Q980 30 1010 18 Q1040 10 1070 26 Q1100 32 1130 20 Q1160 10 1200 24 L1200 0 L0 0 Z' fill='%232B1E16'/%3E%3C/svg%3E") no-repeat center;
   background-size: 100% 100%;
 }
+
+/* Hide iOS Video Play Button */
+video::-webkit-media-controls { display: none !important; }
+video::-webkit-media-controls-start-playback-button { display: none !important; opacity: 0; }
+video::-webkit-media-controls-play-button { display: none !important; }
+

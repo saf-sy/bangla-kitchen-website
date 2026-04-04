@@ -278,6 +278,12 @@ export default function CateringSection() {
                 const bell = new Audio('https://actions.google.com/sounds/v1/alarms/bicycle_bell.ogg')
                 bell.volume = 1.0
                 bell.play().catch(() => {})
+                
+                // Allow user tap to override iOS low power mode blocking inline autoplay
+                const v = rickshawVideoRef.current
+                if (v && v.paused) {
+                  v.play().catch(() => {})
+                }
               }}
             >
               <div
@@ -289,6 +295,8 @@ export default function CateringSection() {
                   style={{
                     filter: `url(#${RICKSHAW_FILTER_ID}) drop-shadow(0px 0px 0.5px rgba(43,30,22,0.6))`,
                     mixBlendMode: 'multiply',
+                    transform: 'translateZ(0)',
+                    opacity: 0.99,
                   }}
                   src="/textures/rickshaw-driving-transparent.mp4"
                   width={360}

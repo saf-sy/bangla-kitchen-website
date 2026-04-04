@@ -124,7 +124,7 @@ export default function CateringSection() {
   const rickshawAnimRef = useRef(null)
   const hasStartedRef = useRef(false)
   const rickshawX = useMotionValue(`${RICKSHAW_TUNING_DEFAULTS.travelStartPercent}%`)
-  const rickshawInView = useInView(rickshawRowRef, { once: true, amount: 0.1 })
+  const rickshawInView = useInView(rickshawRowRef, { once: true, amount: 0.25 })
   const rickshawTuningRef = useRef(rickshawTuning)
   rickshawTuningRef.current = rickshawTuning
 
@@ -168,7 +168,7 @@ export default function CateringSection() {
     let endPx = `${rsEnd}%` // fallback to default
 
     if (rickshawEl) {
-      const elW = rickshawEl.offsetWidth || 526
+      const elW = rickshawEl.offsetWidth || 560
       const centerPx = (viewportW - elW) / 2
       endPx = `${centerPx}px`
     }
@@ -249,7 +249,7 @@ export default function CateringSection() {
 
           <div
             ref={rickshawRowRef}
-            className="relative isolate z-[2] mt-8 md:mt-10 h-[14rem] md:h-[18rem] overflow-hidden bg-parchment pb-2 pt-3 md:pt-5 pointer-events-none text-espresso w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)]"
+            className="relative isolate z-[2] mt-8 md:mt-10 h-[16rem] md:h-[22rem] overflow-hidden bg-parchment pb-2 pt-3 md:pt-5 pointer-events-none text-espresso w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)]"
           >
             <div className="absolute inset-x-0 bottom-2 md:bottom-4 border-b border-dashed border-espresso/45" />
             <motion.div
@@ -270,7 +270,7 @@ export default function CateringSection() {
               <RickshawSprite
                 ref={rickshawSpriteRef}
                 isMoving={isRickshawMoving}
-                className="drop-shadow-[0px_0px_0.5px_rgba(43,30,22,0.6)] origin-bottom scale-[0.4] md:scale-[0.6]"
+                className="drop-shadow-[0px_0px_0.5px_rgba(43,30,22,0.6)] origin-bottom scale-[0.5] md:scale-[0.7]"
               />
             </motion.div>
           </div>

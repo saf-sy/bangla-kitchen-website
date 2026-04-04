@@ -31,17 +31,43 @@ export default function StorySection() {
 
         <div className="max-w-6xl mx-auto px-8 md:px-10 relative z-10">
           <div className="grid md:grid-cols-12 gap-10 md:gap-16 items-start">
-            <motion.blockquote
-              className="md:col-span-5 border-l-4 border-gold pl-6 md:pl-8 md:mt-8"
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              viewport={{ once: true }}
-            >
-              <p className="font-serif text-2xl md:text-3xl italic leading-relaxed text-espresso/75">
-                “By the end of your meal, we hope you will have tasted a little of Bangladesh — its rivers, its kitchens, its celebrations, and its heart.”
-              </p>
-            </motion.blockquote>
+            {/* Left column: quote + polaroid */}
+            <div className="md:col-span-5 space-y-8 md:space-y-10">
+              <motion.blockquote
+                className="border-l-4 border-gold pl-6 md:pl-8 md:mt-8"
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                viewport={{ once: true }}
+              >
+                <p className="font-serif text-2xl md:text-3xl italic leading-relaxed text-espresso/75">
+                  "By the end of your meal, we hope you will have tasted a little of Bangladesh — its rivers, its kitchens, its celebrations, and its heart."
+                </p>
+              </motion.blockquote>
+              <motion.div
+                initial={{ opacity: 0, rotate: 2 }}
+                whileInView={{ opacity: 1, rotate: -2 }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                <div className="bg-polaroid p-3 md:p-4 pb-12 md:pb-14 shadow-xl shadow-espresso/10 rotate-[-2deg] max-w-xs mx-auto md:mx-0 border border-espresso/8">
+                  <div className="overflow-hidden">
+                    <img
+                      src="/textures/grandparents.JPG"
+                      alt="The family behind Bangla Kitchen"
+                      className="w-full h-auto aspect-[4/5] object-cover object-top"
+                      style={{
+                        filter: 'grayscale(100%) sepia(25%) contrast(1.1) brightness(0.95)',
+                      }}
+                      loading="lazy"
+                    />
+                  </div>
+                  <p className="font-hand text-espresso/50 text-center text-sm mt-3 -rotate-1">The heart of Bangla Kitchen</p>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right column: story text */}
             <motion.div
               className="md:col-span-7"
               initial={{ opacity: 0, y: 30 }}
@@ -51,7 +77,7 @@ export default function StorySection() {
             >
               <div className="section-header-texture inline-block pr-3 mb-4">
                 <p className="font-hand text-terracotta text-xl mb-1 -rotate-1 origin-left">Our Story</p>
-                <h2 className="font-serif text-4xl md:text-5xl font-bold tracking-tight">A Mother’s<br />Kitchen</h2>
+                <h2 className="font-serif text-4xl md:text-5xl font-bold tracking-tight">A Mother's<br />Kitchen</h2>
               </div>
               <p className="text-espresso/60 leading-[1.75] tracking-[0.012em] mb-4 max-w-lg">
                 Bangla Kitchen began the way all Bangladeshi kitchens begin — a mother cooking for her family.

@@ -6,7 +6,7 @@ import { contacts } from '@/app/data/siteContent'
 
 export default function HeroSection() {
   const heroBtnClass =
-    'inline-flex h-14 flex-1 min-w-0 items-center justify-center gap-2 px-4 sm:px-6 text-sm sm:text-base font-bold tracking-wide transition-all duration-300'
+    'inline-flex min-h-[3.5rem] w-full sm:w-auto sm:flex-1 shrink-0 items-center justify-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold tracking-wide transition-all duration-300'
 
   return (
     <section className="hero-vintage-map relative overflow-x-visible overflow-y-visible pt-40 md:pt-48 pb-0 mb-[-1px]">

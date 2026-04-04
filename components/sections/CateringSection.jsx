@@ -247,7 +247,7 @@ export default function CateringSection() {
 
           <div
             ref={rickshawRowRef}
-            className="relative isolate z-[2] mt-10 h-[18rem] md:h-[24rem] overflow-visible bg-parchment pb-2 pt-5 pointer-events-none text-espresso w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)]"
+            className="relative isolate z-[2] mt-8 md:mt-10 h-[12rem] md:h-[24rem] overflow-hidden bg-parchment pb-2 pt-3 md:pt-5 pointer-events-none text-espresso w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)]"
           >
             <RickshawKnockoutFilter
               key={rickshawTuning.outlineDilateRadius}
@@ -271,7 +271,7 @@ export default function CateringSection() {
               }}
             >
               <div
-                className="isolate h-[18rem] w-max overflow-visible md:h-[24rem] [clip-path:inset(0_32px_0_20px)] [-webkit-clip-path:inset(0_32px_0_20px)] md:[clip-path:inset(0_40px_0_22px)] md:[-webkit-clip-path:inset(0_40px_0_22px)]"
+                className="isolate h-[12rem] w-max overflow-visible md:h-[24rem] [clip-path:inset(0_16px_0_10px)] [-webkit-clip-path:inset(0_16px_0_10px)] md:[clip-path:inset(0_40px_0_22px)] md:[-webkit-clip-path:inset(0_40px_0_22px)]"
               >
                 <video
                   ref={rickshawVideoRef}

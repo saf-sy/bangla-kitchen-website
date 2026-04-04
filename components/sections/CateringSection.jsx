@@ -28,7 +28,7 @@ import {
   RICKSHAW_TUNING_DEFAULTS,
 } from '@/lib/rickshawTuning'
 import { useRiverDividerCapRem } from '@/lib/useRiverDividerCapRem'
-import RickshawKnockoutFilter from '@/components/rickshaw/RickshawKnockoutFilter'
+import RickshawSprite from '@/components/rickshaw/RickshawSprite'
 import RickshawTunerPanel from '@/components/rickshaw/RickshawTunerPanel'
 import { contacts, deliveryPlatforms } from '@/app/data/siteContent'
 
@@ -109,9 +109,6 @@ function DeliveryPlatformIcon({ icon, name }) {
   )
 }
 
-const RICKSHAW_FILTER_ID = 'rickshaw-knockout-tunable'
-
-// Replaced video scrubbing with smooth playback
 
 export default function CateringSection() {
   const [footerLogoError, setFooterLogoError] = useState(false)
@@ -122,7 +119,7 @@ export default function CateringSection() {
   const [rickshawTuning, setRickshawTuning] = useState(() => mergeRickshawTuning())
   const prefersReducedMotion = useReducedMotion()
   const rickshawRowRef = useRef(null)
-  const rickshawVideoRef = useRef(null)
+  const rickshawSpriteRef = useRef(null)
   const rickshawAnimRef = useRef(null)
   const rickshawX = useMotionValue(`${RICKSHAW_TUNING_DEFAULTS.travelStartPercent}%`)
   const rickshawInView = useInView(rickshawRowRef, { once: true, amount: 0.05 })
@@ -161,7 +158,7 @@ export default function CateringSection() {
     }
 
     // Calculate end position to center the rickshaw on screen
-    const rickshawEl = rickshawVideoRef.current?.parentElement
+    const rickshawEl = rickshawSpriteRef.current
     const viewportW = window.innerWidth
     let endPx = `${rsEnd}%` // fallback to default
 
@@ -172,29 +169,17 @@ export default function CateringSection() {
     }
 
     rickshawX.set(startPct)
-    const v = rickshawVideoRef.current
-    if (v) {
-      if (v.readyState >= 1) {
-        try { v.currentTime = 0 } catch {}
-      }
-      v.play().catch(() => {})
-        
-      // Play ring ring sound once
-      try {
-        const bell = new Audio('https://actions.google.com/sounds/v1/alarms/bicycle_bell.ogg')
-        bell.volume = 0.85
-        bell.play().catch(() => {
-          console.log('Autoplay blocked: rickshaw entered but user hasn\'t interacted with the page yet.')
-        })
-      } catch {}
-    }
+
+    // Play ring ring sound once
+    try {
+      const bell = new Audio('https://actions.google.com/sounds/v1/alarms/bicycle_bell.ogg')
+      bell.volume = 0.85
+      bell.play().catch(() => {})
+    } catch {}
 
     rickshawAnimRef.current = animate(rickshawX, endPx, {
       duration: rsDuration,
       ease: "easeOut",
-      onComplete: () => {
-        if (v) v.pause()
-      }
     })
 
     return () => {
@@ -257,13 +242,8 @@ export default function CateringSection() {
 
           <div
             ref={rickshawRowRef}
-            className="relative isolate z-[2] mt-8 md:mt-10 h-[12rem] md:h-[24rem] overflow-hidden bg-parchment pb-2 pt-3 md:pt-5 pointer-events-none text-espresso w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)]"
+            className="relative isolate z-[2] mt-8 md:mt-10 h-[10rem] md:h-[14rem] overflow-hidden bg-parchment pb-2 pt-3 md:pt-5 pointer-events-none text-espresso w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)]"
           >
-            <RickshawKnockoutFilter
-              key={rickshawTuning.outlineDilateRadius}
-              dilateRadius={rickshawTuning.outlineDilateRadius}
-              filterId={RICKSHAW_FILTER_ID}
-            />
             <div className="absolute inset-x-0 bottom-2 md:bottom-4 border-b border-dashed border-espresso/45" />
             <motion.div
               className="absolute bottom-2 md:bottom-4 left-0 will-change-transform pointer-events-auto cursor-pointer"
@@ -278,35 +258,12 @@ export default function CateringSection() {
                 const bell = new Audio('https://actions.google.com/sounds/v1/alarms/bicycle_bell.ogg')
                 bell.volume = 1.0
                 bell.play().catch(() => {})
-                
-                // Allow user tap to override iOS low power mode blocking inline autoplay
-                const v = rickshawVideoRef.current
-                if (v && v.paused) {
-                  v.play().catch(() => {})
-                }
               }}
             >
-              <div
-                className="isolate h-[12rem] w-max overflow-visible md:h-[24rem] [clip-path:inset(0_16px_0_10px)] [-webkit-clip-path:inset(0_16px_0_10px)] md:[clip-path:inset(0_40px_0_22px)] md:[-webkit-clip-path:inset(0_40px_0_22px)]"
-              >
-                <video
-                  ref={rickshawVideoRef}
-                  className="pointer-events-none h-full w-auto min-w-[280px] max-w-none origin-bottom scale-100"
-                  style={{
-                    filter: `url(#${RICKSHAW_FILTER_ID}) drop-shadow(0px 0px 0.5px rgba(43,30,22,0.6))`,
-                    mixBlendMode: 'multiply',
-                    transform: 'translateZ(0)',
-                    opacity: 0.99,
-                  }}
-                  src="/textures/rickshaw-driving-transparent.mp4"
-                  width={360}
-                  height={160}
-                  muted
-                  autoPlay
-                  playsInline
-                  preload="auto"
-                />
-              </div>
+              <RickshawSprite
+                ref={rickshawSpriteRef}
+                className="drop-shadow-[0px_0px_0.5px_rgba(43,30,22,0.6)]"
+              />
             </motion.div>
           </div>
         </div>

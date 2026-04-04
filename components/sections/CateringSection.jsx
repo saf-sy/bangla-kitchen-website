@@ -149,7 +149,6 @@ export default function CateringSection() {
     rickshawAnimRef.current = null
 
     const startPct = `${rsStart}%`
-    const endPct = `${rsEnd}%`
 
     if (!rickshawInView) {
       rickshawX.set(startPct)
@@ -159,6 +158,17 @@ export default function CateringSection() {
     if (prefersReducedMotion) {
       rickshawX.set('0%')
       return
+    }
+
+    // Calculate end position to center the rickshaw on screen
+    const rickshawEl = rickshawVideoRef.current?.parentElement
+    const viewportW = window.innerWidth
+    let endPx = `${rsEnd}%` // fallback to default
+
+    if (rickshawEl) {
+      const elW = rickshawEl.offsetWidth || 300
+      const centerPx = (viewportW - elW) / 2
+      endPx = `${centerPx}px`
     }
 
     rickshawX.set(startPct)
@@ -179,7 +189,7 @@ export default function CateringSection() {
       }
     }
 
-    rickshawAnimRef.current = animate(rickshawX, endPct, {
+    rickshawAnimRef.current = animate(rickshawX, endPx, {
       duration: rsDuration,
       ease: "easeOut",
       onComplete: () => {
@@ -478,10 +488,10 @@ export default function CateringSection() {
       <RickshawTunerPanel tuning={rickshawTuning} setTuning={setRickshawTuning} />
 
       <div className="fixed bottom-0 left-3 right-3 z-[10050] pb-3 md:hidden">
-        <div className="grid grid-cols-3 gap-2 p-2 bg-parchment/95 backdrop-blur-md border border-gold/25 rounded-full shadow-xl shadow-espresso/15">
-          <a href="#menu" className="text-center py-2.5 rounded-full font-bold text-sm text-espresso bg-white/80">Menu</a>
-          <a href={contacts.restaurantPhoneHref} className="text-center py-2.5 rounded-full font-bold text-sm text-white bg-terracotta shadow-md shadow-terracotta/20">Call</a>
-          <a href="#delivery" className="text-center py-2.5 rounded-full font-bold text-sm text-espresso bg-white/80">Order</a>
+        <div className="grid grid-cols-3 gap-1.5 p-1.5 bg-espresso/95 backdrop-blur-md border border-gold/30 shadow-xl shadow-espresso/25">
+          <a href="#menu" className="text-center py-2.5 font-serif font-bold text-xs tracking-tight text-parchment/90 hover:text-gold transition-colors duration-300">Menu</a>
+          <a href={contacts.restaurantPhoneHref} className="text-center py-2.5 font-bold text-xs tracking-wide text-white bg-terracotta shadow-md shadow-terracotta/20">Call</a>
+          <a href="#delivery" className="text-center py-2.5 font-serif font-bold text-xs tracking-tight text-parchment/90 hover:text-gold transition-colors duration-300">Order</a>
         </div>
       </div>
     </>

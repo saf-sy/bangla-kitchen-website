@@ -34,13 +34,13 @@ export default function HeroSection() {
             <p className="font-serif text-lg md:text-xl italic text-espresso/60 max-w-md mb-8 leading-relaxed">
               The food we grew up on. Now yours.
             </p>
-            <div className="flex flex-row flex-nowrap items-stretch gap-3 sm:gap-4 mb-2 max-w-xl">
+            <div className="flex flex-col sm:flex-row items-stretch gap-3 sm:gap-4 mb-2 max-w-xl">
               <a
                 href="#menu"
                 className={`${heroBtnClass} bg-terracotta text-white shadow-lg shadow-terracotta/25 hover:shadow-xl hover:shadow-terracotta/35 hover:-translate-y-0.5`}
                 style={{ clipPath: 'polygon(0 0, 100% 0, 98% 100%, 2% 100%)' }}
               >
-                <span className="truncate sm:whitespace-normal">See the Menu</span>
+                <span>See the Menu</span>
                 <ChevronRight size={18} className="shrink-0" aria-hidden />
               </a>
               <a

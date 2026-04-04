@@ -173,20 +173,20 @@ export default function CateringSection() {
 
     rickshawX.set(startPct)
     const v = rickshawVideoRef.current
-    if (v && v.readyState >= 1) {
-      try {
-        v.currentTime = 0
-        v.play()
+    if (v) {
+      if (v.readyState >= 1) {
+        try { v.currentTime = 0 } catch {}
+      }
+      v.play().catch(() => {})
         
-        // Play ring ring sound once
+      // Play ring ring sound once
+      try {
         const bell = new Audio('https://actions.google.com/sounds/v1/alarms/bicycle_bell.ogg')
         bell.volume = 0.85
         bell.play().catch(() => {
           console.log('Autoplay blocked: rickshaw entered but user hasn\'t interacted with the page yet.')
         })
-      } catch {
-        /* not seekable yet */
-      }
+      } catch {}
     }
 
     rickshawAnimRef.current = animate(rickshawX, endPx, {
@@ -293,6 +293,7 @@ export default function CateringSection() {
                   width={360}
                   height={160}
                   muted
+                  autoPlay
                   playsInline
                   preload="auto"
                 />
@@ -340,7 +341,7 @@ export default function CateringSection() {
         edge="top"
         variant="classic"
         capScale={capScale}
-        className="relative isolate overflow-x-hidden overflow-y-visible bg-espresso pb-32 pt-0 text-parchment md:pb-24 -mt-[calc(2.75rem+2px)] md:-mt-[calc(3.75rem+2px)]"
+        className="relative isolate overflow-x-hidden overflow-y-visible bg-espresso pb-24 pt-0 text-parchment md:pb-12 -mt-[calc(2.75rem+2px)] md:-mt-[calc(3.75rem+2px)]"
       >
         <div
           className="pointer-events-none absolute top-0 left-0 right-0 z-[19] h-11 md:h-[3.75rem] text-[0] leading-[0]"

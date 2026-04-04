@@ -41,7 +41,8 @@ export default function StorySection() {
                 viewport={{ once: true }}
               >
                 <p className="font-serif text-2xl md:text-3xl italic leading-relaxed text-espresso/75">
-                  "By the end of your meal, we hope you will have tasted a little of Bangladesh — its rivers, its kitchens, its celebrations, and its heart."
+                  &ldquo;By the end of your meal, we hope you will have tasted a little of Bangladesh — its rivers, its
+                  kitchens, its celebrations, and its heart.&rdquo;
                 </p>
               </motion.blockquote>
               <motion.div
@@ -77,7 +78,7 @@ export default function StorySection() {
             >
               <div className="section-header-texture inline-block pr-3 mb-4">
                 <p className="font-hand text-terracotta text-xl mb-1 -rotate-1 origin-left">Our Story</p>
-                <h2 className="font-serif text-4xl md:text-5xl font-bold tracking-tight">A Mother's<br />Kitchen</h2>
+                <h2 className="font-serif text-4xl md:text-5xl font-bold tracking-tight">A Mother&rsquo;s<br />Kitchen</h2>
               </div>
               <p className="text-espresso/60 leading-[1.75] tracking-[0.012em] mb-4 max-w-lg">
                 Bangla Kitchen began the way all Bangladeshi kitchens begin — a mother cooking for her family.

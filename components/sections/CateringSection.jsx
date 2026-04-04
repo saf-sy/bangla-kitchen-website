@@ -288,6 +288,7 @@ export default function CateringSection() {
                   className="pointer-events-none h-full w-auto min-w-[280px] max-w-none origin-bottom scale-100"
                   style={{
                     filter: `url(#${RICKSHAW_FILTER_ID}) drop-shadow(0px 0px 0.5px rgba(43,30,22,0.6))`,
+                    mixBlendMode: 'multiply',
                   }}
                   src="/textures/rickshaw-driving-transparent.mp4"
                   width={360}

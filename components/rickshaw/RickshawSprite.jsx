@@ -3,9 +3,10 @@
 import { forwardRef, useEffect, useRef, useState } from 'react'
 
 const FRAME_COUNT = 64
-const FRAME_HEIGHT = 200
-const FRAME_WIDTH = 356
-const FPS = 12 // Smooth 12fps for the 64 frames
+const FRAME_HEIGHT = 400
+const FRAME_WIDTH = 568
+const GRID_COLS = 8
+const FPS = 12
 
 /**
  * Rickshaw animation using a CSS sprite sheet instead of video.
@@ -46,7 +47,11 @@ const RickshawSprite = forwardRef(function RickshawSprite({ isMoving = false, cl
       if (timestamp - lastTimeRef.current >= interval) {
         lastTimeRef.current = timestamp
         frameRef.current = (frameRef.current + 1) % FRAME_COUNT
-        el.style.backgroundPositionY = `-${frameRef.current * FRAME_HEIGHT}px`
+        
+        const col = frameRef.current % GRID_COLS
+        const row = Math.floor(frameRef.current / GRID_COLS)
+        
+        el.style.backgroundPosition = `-${col * FRAME_WIDTH}px -${row * FRAME_HEIGHT}px`
       }
       rafRef.current = requestAnimationFrame(tick)
     }
@@ -58,7 +63,7 @@ const RickshawSprite = forwardRef(function RickshawSprite({ isMoving = false, cl
     }
   }, [isMoving])
 
-  const src = supportsWebP ? '/textures/rickshaw-sprite-v3.webp' : '/textures/rickshaw-sprite-v3.png'
+  const src = supportsWebP ? '/textures/rickshaw-sprite-grid.webp' : '/textures/rickshaw-sprite-grid.png'
 
   return (
     <div
@@ -70,9 +75,8 @@ const RickshawSprite = forwardRef(function RickshawSprite({ isMoving = false, cl
         height: FRAME_HEIGHT,
         backgroundImage: `url(${src})`,
         backgroundRepeat: 'no-repeat',
-        backgroundSize: `${FRAME_WIDTH}px ${FRAME_COUNT * FRAME_HEIGHT}px`,
-        backgroundPositionX: '0px',
-        backgroundPositionY: '0px',
+        backgroundSize: `${FRAME_WIDTH * GRID_COLS}px ${FRAME_HEIGHT * (FRAME_COUNT / GRID_COLS)}px`,
+        backgroundPosition: '0px 0px',
         imageRendering: 'auto',
         ...style,
       }}

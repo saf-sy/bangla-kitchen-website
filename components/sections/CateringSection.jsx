@@ -168,7 +168,7 @@ export default function CateringSection() {
     let endPx = `${rsEnd}%` // fallback to default
 
     if (rickshawEl) {
-      const elW = rickshawEl.offsetWidth || 356
+      const elW = rickshawEl.offsetWidth || 568
       const centerPx = (viewportW - elW) / 2
       endPx = `${centerPx}px`
     }
@@ -270,7 +270,7 @@ export default function CateringSection() {
               <RickshawSprite
                 ref={rickshawSpriteRef}
                 isMoving={isRickshawMoving}
-                className="drop-shadow-[0px_0px_0.5px_rgba(43,30,22,0.6)]"
+                className="drop-shadow-[0px_0px_0.5px_rgba(43,30,22,0.6)] origin-bottom scale-[0.45] md:scale-[0.55]"
               />
             </motion.div>
           </div>

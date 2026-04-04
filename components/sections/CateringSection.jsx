@@ -168,7 +168,7 @@ export default function CateringSection() {
     let endPx = `${rsEnd}%` // fallback to default
 
     if (rickshawEl) {
-      const elW = rickshawEl.offsetWidth || 568
+      const elW = rickshawEl.offsetWidth || 526
       const centerPx = (viewportW - elW) / 2
       endPx = `${centerPx}px`
     }
@@ -249,7 +249,7 @@ export default function CateringSection() {
 
           <div
             ref={rickshawRowRef}
-            className="relative isolate z-[2] mt-8 md:mt-10 h-[10rem] md:h-[14rem] overflow-hidden bg-parchment pb-2 pt-3 md:pt-5 pointer-events-none text-espresso w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)]"
+            className="relative isolate z-[2] mt-8 md:mt-10 h-[12rem] md:h-[16rem] overflow-hidden bg-parchment pb-2 pt-3 md:pt-5 pointer-events-none text-espresso w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)]"
           >
             <div className="absolute inset-x-0 bottom-2 md:bottom-4 border-b border-dashed border-espresso/45" />
             <motion.div

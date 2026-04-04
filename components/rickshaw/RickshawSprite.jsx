@@ -4,7 +4,7 @@ import { forwardRef, useEffect, useRef, useState } from 'react'
 
 const FRAME_COUNT = 64
 const FRAME_HEIGHT = 400
-const FRAME_WIDTH = 568
+const FRAME_WIDTH = 526
 const GRID_COLS = 8
 const FPS = 12
 

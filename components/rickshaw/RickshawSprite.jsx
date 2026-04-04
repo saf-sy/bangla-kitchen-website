@@ -2,16 +2,16 @@
 
 import { forwardRef, useEffect, useRef, useState } from 'react'
 
-const FRAME_COUNT = 32
-const FRAME_HEIGHT = 168
-const FRAME_WIDTH = 300
-const FPS = 8
+const FRAME_COUNT = 64
+const FRAME_HEIGHT = 200
+const FRAME_WIDTH = 356
+const FPS = 12 // Smooth 12fps for the 64 frames
 
 /**
  * Rickshaw animation using a CSS sprite sheet instead of video.
  * Works on all devices including iOS Safari in low-power mode.
  */
-const RickshawSprite = forwardRef(function RickshawSprite({ className = '', style = {} }, ref) {
+const RickshawSprite = forwardRef(function RickshawSprite({ isMoving = false, className = '', style = {} }, ref) {
   const innerRef = useRef(null)
   const frameRef = useRef(0)
   const rafRef = useRef(null)
@@ -35,7 +35,10 @@ const RickshawSprite = forwardRef(function RickshawSprite({ className = '', styl
 
   useEffect(() => {
     const el = innerRef.current
-    if (!el) return
+    if (!el || !isMoving) {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      return
+    }
 
     const interval = 1000 / FPS
 
@@ -53,9 +56,9 @@ const RickshawSprite = forwardRef(function RickshawSprite({ className = '', styl
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
-  }, [])
+  }, [isMoving])
 
-  const src = supportsWebP ? '/textures/rickshaw-sprite.webp' : '/textures/rickshaw-sprite.png'
+  const src = supportsWebP ? '/textures/rickshaw-sprite-v3.webp' : '/textures/rickshaw-sprite-v3.png'
 
   return (
     <div

@@ -117,19 +117,23 @@ export default function CateringSection() {
   const swellWaveFillD = useMemo(() => getRiverWaveFillCapPathDForVariant('swell', 60, 96), [])
   const classicWaveFillD = useMemo(() => getRiverWaveFillCapPathDForVariant('classic', 60, 96), [])
   const [rickshawTuning, setRickshawTuning] = useState(() => mergeRickshawTuning())
+  const [isRickshawMoving, setIsRickshawMoving] = useState(false)
   const prefersReducedMotion = useReducedMotion()
   const rickshawRowRef = useRef(null)
   const rickshawSpriteRef = useRef(null)
   const rickshawAnimRef = useRef(null)
+  const hasStartedRef = useRef(false)
   const rickshawX = useMotionValue(`${RICKSHAW_TUNING_DEFAULTS.travelStartPercent}%`)
-  const rickshawInView = useInView(rickshawRowRef, { once: true, amount: 0.05 })
+  const rickshawInView = useInView(rickshawRowRef, { once: true, amount: 0.1 })
   const rickshawTuningRef = useRef(rickshawTuning)
   rickshawTuningRef.current = rickshawTuning
 
   useEffect(() => {
     const t = readRickshawTuningFromStorage()
     setRickshawTuning(t)
-    rickshawX.set(`${t.travelStartPercent}%`)
+    if (!hasStartedRef.current) {
+      rickshawX.set(`${t.travelStartPercent}%`)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- once on mount; rickshawX is stable
   }, [])
 
@@ -147,8 +151,7 @@ export default function CateringSection() {
 
     const startPct = `${rsStart}%`
 
-    if (!rickshawInView) {
-      rickshawX.set(startPct)
+    if (!rickshawInView || hasStartedRef.current) {
       return
     }
 
@@ -157,13 +160,15 @@ export default function CateringSection() {
       return
     }
 
+    hasStartedRef.current = true
+
     // Calculate end position to center the rickshaw on screen
     const rickshawEl = rickshawSpriteRef.current
     const viewportW = window.innerWidth
     let endPx = `${rsEnd}%` // fallback to default
 
     if (rickshawEl) {
-      const elW = rickshawEl.offsetWidth || 300
+      const elW = rickshawEl.offsetWidth || 356
       const centerPx = (viewportW - elW) / 2
       endPx = `${centerPx}px`
     }
@@ -177,9 +182,11 @@ export default function CateringSection() {
       bell.play().catch(() => {})
     } catch {}
 
+    setIsRickshawMoving(true)
     rickshawAnimRef.current = animate(rickshawX, endPx, {
       duration: rsDuration,
       ease: "easeOut",
+      onComplete: () => setIsRickshawMoving(false)
     })
 
     return () => {
@@ -262,6 +269,7 @@ export default function CateringSection() {
             >
               <RickshawSprite
                 ref={rickshawSpriteRef}
+                isMoving={isRickshawMoving}
                 className="drop-shadow-[0px_0px_0.5px_rgba(43,30,22,0.6)]"
               />
             </motion.div>

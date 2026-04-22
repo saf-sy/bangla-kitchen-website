@@ -76,17 +76,17 @@ export default function MenuSection() {
                 key={item.name}
                 className={`menu-row flex flex-col py-4 px-2 border-b border-dashed border-espresso/12 last:border-0 group ${idx % 2 === 1 ? 'menu-row--alt' : ''}`}
               >
-                <div className="flex items-baseline w-full">
-                  <div className="shrink-0">
+                <div className="menu-item-heading">
+                  <div className="menu-item-name-block">
                     <span className="ink-bleed font-semibold text-espresso group-hover:text-terracotta transition-colors duration-300 ease-out text-base md:text-lg tracking-tight">
                       {item.name}
                     </span>
                     {item.note && <span className="inline-block ml-2 font-hand text-terracotta text-sm normal-case font-normal">— {item.note}</span>}
                   </div>
                   
-                  <span className="menu-leader mx-3" />
+                  <span className="menu-leader" aria-hidden="true" />
                   
-                  <span className="menu-item-price flex-shrink-0 font-serif font-bold text-terracotta text-base md:text-xl leading-none">
+                  <span className="menu-item-price font-serif font-bold text-terracotta text-base md:text-xl leading-none">
                     {item.price}
                   </span>
                 </div>

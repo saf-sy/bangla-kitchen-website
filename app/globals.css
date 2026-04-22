@@ -202,12 +202,31 @@ body::after {
    MENU DOTTED LEADER
    ═══════════════════════════════════════════════ */
 .menu-leader {
-  flex: 1;
-  border-bottom: 2px dotted rgba(43, 30, 22, 0.22);
-  margin: 0 0.5rem;
-  min-width: 1.5rem;
+  flex: 1 1 2rem;
+  min-width: clamp(1rem, 8vw, 2.5rem);
+  border-bottom: 2px dotted rgba(212, 175, 55, 0.78);
+  margin: 0;
   align-self: center;
-  transform: translateY(-3px);
+  transform: translateY(-0.18em);
+}
+
+.menu-item-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.menu-item-name-block {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.menu-item-price {
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 /* ═══════════════════════════════════════════════

@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { BengaliWatermark, FloralMotif, JamdaniPattern, PolaroidPhoto, SpiceMotif, RiverDivider } from '@/components/art/Decoratives'
 import RiverWaveSectionClip from '@/components/art/RiverWaveSectionClip'
 import { foodImages } from '@/app/data/siteContent'
@@ -40,15 +41,16 @@ export default function StorySection() {
                 viewport={{ once: true }}
               >
                 <div className="bg-polaroid p-3 md:p-4 pb-12 md:pb-14 shadow-xl shadow-espresso/10 rotate-[-2deg] max-w-xs mx-auto md:mx-0 border border-espresso/8">
-                  <div className="overflow-hidden">
-                    <img
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <Image
                       src="/textures/grandparents.JPG"
                       alt="The family behind Bangla Kitchen"
-                      className="w-full h-auto aspect-[4/5] object-cover object-top"
+                      fill
+                      sizes="(min-width: 768px) 320px, 80vw"
+                      className="object-cover object-top"
                       style={{
                         filter: 'grayscale(100%) sepia(25%) contrast(1.1) brightness(0.95)',
                       }}
-                      loading="lazy"
                     />
                   </div>
                   <p className="font-hand text-espresso/50 text-center text-sm mt-3 -rotate-1">The heart of Bangla Kitchen</p>

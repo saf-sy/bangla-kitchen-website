@@ -26,7 +26,17 @@ window.City = (() => {
   const darken = (c, k) => mixHex(c, '#141928', k);
   const lighten = (c, k) => mixHex(c, '#ffffff', k);
 
+  // Memoized: called by city, car and ambient layers every frame with the
+  // same progress value.
+  let palCacheP = -1, palCache = null;
   function palette(p) {
+    if (p === palCacheP) return palCache;
+    palCacheP = p;
+    palCache = computePalette(p);
+    return palCache;
+  }
+
+  function computePalette(p) {
     const seg = Math.min(KEYS.length - 2, Math.floor(p * (KEYS.length - 1)));
     const k = p * (KEYS.length - 1) - seg;
     const a = KEYS[seg], b = KEYS[seg + 1];

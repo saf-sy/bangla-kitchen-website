@@ -110,7 +110,7 @@ window.City = (() => {
     // --- cross streets midway between stops ---
     for (let i = 0; i < view.stops.length - 1; i++) {
       const y = (view.stops[i].worldY + view.stops[i + 1].worldY) / 2;
-      world.intersections.push({ y, h: world.laneW * 2.4 });
+      world.intersections.push({ y, h: world.laneW * 1.9 });
     }
 
     // --- filler buildings, trees, streetlights along the route ---
@@ -289,20 +289,6 @@ window.City = (() => {
     ctx.fillStyle = pal.road;
     ctx.fillRect(rx, 0, world.roadW, vh);
 
-    // cross streets
-    for (const ix of world.intersections) {
-      const sy = ix.y - scrollY;
-      if (cull(sy, ix.h + 60)) continue;
-      ctx.fillStyle = mixHex('#b9bcc7', '#2b2e41', pal.dark * 0.55);
-      ctx.fillRect(0, sy - ix.h / 2 - world.sidewalkW * 0.7, vw, ix.h + world.sidewalkW * 1.4);
-      ctx.fillStyle = pal.road;
-      ctx.fillRect(0, sy - ix.h / 2, vw, ix.h);
-      // stop lines on the main road
-      ctx.fillStyle = 'rgba(244,242,236,0.75)';
-      ctx.fillRect(rx + world.roadW / 2, sy + ix.h / 2 + 8, world.roadW / 2, 5);
-      ctx.fillRect(rx, sy - ix.h / 2 - 13, world.roadW / 2, 5);
-    }
-
     // lane lines (center double + side dashes), world-aligned
     const period = 84, dashLen = 36;
     const startWorld = Math.floor(scrollY / period) * period - period;
@@ -324,6 +310,20 @@ window.City = (() => {
       for (let i = 0; i < 8; i++) {
         ctx.fillRect(rx + 8 + i * (world.roadW - 16) / 8, sy, (world.roadW - 16) / 8 - 6, 26);
       }
+    }
+
+    // cross streets (painted after lane markings so they read as breaks)
+    for (const ix of world.intersections) {
+      const sy = ix.y - scrollY;
+      if (cull(sy, ix.h + 60)) continue;
+      ctx.fillStyle = mixHex('#b9bcc7', '#2b2e41', pal.dark * 0.55);
+      ctx.fillRect(0, sy - ix.h / 2 - world.sidewalkW * 0.7, vw, ix.h + world.sidewalkW * 1.4);
+      ctx.fillStyle = pal.road;
+      ctx.fillRect(0, sy - ix.h / 2, vw, ix.h);
+      // stop lines on the main road (approach side of each direction)
+      ctx.fillStyle = 'rgba(244,242,236,0.75)';
+      ctx.fillRect(rx + world.roadW / 2, sy + ix.h / 2 + world.sidewalkW * 0.7 + 6, world.roadW / 2, 5);
+      ctx.fillRect(rx, sy - ix.h / 2 - world.sidewalkW * 0.7 - 11, world.roadW / 2, 5);
     }
 
     // buildings

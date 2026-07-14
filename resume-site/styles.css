@@ -28,6 +28,7 @@
   --accent-soft: #f2b8a2;
   --tag-bg: rgba(31, 36, 48, 0.07);
   --tag-ink: #3c4356;
+  --hairline: rgba(31, 36, 48, 0.1);
 
   /* Day-night palette keyframes (consumed by city.js) */
   --sky-morning-top: #aee3f5;   --sky-morning-bot: #fdeecb;
@@ -129,7 +130,7 @@ a  { color: var(--accent); }
 @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
 
 .entries .entry { padding: 0.9rem 0; }
-.entries .entry + .entry { border-top: 1px solid rgba(31, 36, 48, 0.1); }
+.entries .entry + .entry { border-top: 1px solid var(--hairline); }
 .meta { color: var(--ink-soft); font-size: var(--fs-small); margin-top: -0.35em; }
 
 .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.35rem; }
@@ -253,8 +254,19 @@ body.drive-mode #hero.active .card { transform: translateY(0); }
   body.drive-mode .stop.active .card { transform: translateY(0); }
 }
 
-/* Night text handling: main.js sets data-tod on <html> */
-html[data-tod="night"] body.drive-mode { color-scheme: dark; }
+/* Time-of-day UI theming: main.js sets data-tod on <html> */
+html[data-tod="golden"] { --accent: #b8502c; }
+html[data-tod="dusk"], html[data-tod="night"] {
+  color-scheme: dark;
+  --card-bg: rgba(30, 33, 52, 0.92);
+  --ink: #f4f2ec;
+  --ink-soft: #a8adc4;
+  --accent: #ffb45e;
+  --tag-bg: rgba(255, 255, 255, 0.1);
+  --tag-ink: #d8dcec;
+  --hairline: rgba(255, 255, 255, 0.14);
+  --card-shadow: 0 10px 40px rgba(0, 0, 5, 0.45);
+}
 
 /* ============================================================
    Reduced motion: always the plain page

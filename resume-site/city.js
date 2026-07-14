@@ -6,11 +6,11 @@ window.City = (() => {
 
   // ---------- palette: 5 keyframes across the day, lerped by progress ----
   const KEYS = [
-    { sky0: '#aee3f5', sky1: '#fdeecb', ground: '#cfe0c3', road: '#5d6272', shadow: 0.14, dark: 0.0 },
-    { sky0: '#7cc3ee', sky1: '#cfe9f7', ground: '#bcd6ae', road: '#616676', shadow: 0.2, dark: 0.0 },
-    { sky0: '#f6a45c', sky1: '#fbd9a0', ground: '#d2c08e', road: '#5b5669', shadow: 0.26, dark: 0.18 },
-    { sky0: '#4b4a7c', sky1: '#c96a7e', ground: '#68608a', road: '#3d4058', shadow: 0.18, dark: 0.6 },
-    { sky0: '#0d1026', sky1: '#23264a', ground: '#20233c', road: '#2b2e41', shadow: 0.08, dark: 1.0 },
+    { sky0: '#9fd7ee', sky1: '#ffe9c0', ground: '#a8bd8d', road: '#4c5160', shadow: 0.18, dark: 0.0 },
+    { sky0: '#5fb2e8', sky1: '#bfe2f5', ground: '#93b478', road: '#50556a', shadow: 0.24, dark: 0.0 },
+    { sky0: '#f08c3e', sky1: '#ffce7e', ground: '#b89a5f', road: '#4e485f', shadow: 0.34, dark: 0.18 },
+    { sky0: '#3d3a6e', sky1: '#b85570', ground: '#55496e', road: '#343a52', shadow: 0.2, dark: 0.6 },
+    { sky0: '#090c20', sky1: '#1b1e3c', ground: '#171a30', road: '#23263a', shadow: 0.08, dark: 1.0 },
   ];
 
   function hexToRgb(h) {
@@ -64,6 +64,7 @@ window.City = (() => {
     trees: [],         // {x, y, r}
     lights: [],        // streetlights {x, y, side}
     crosswalks: [],    // worldY values
+    lots: [],          // ground plots {x, y, w, d, k} — subtle tone patches
     intersections: [], // {y, h} cross streets (h = road width of cross street)
     worldEnd: 0,
   };
@@ -85,6 +86,23 @@ window.City = (() => {
     world.lights = [];
     world.crosswalks = [];
     world.intersections = [];
+    world.lots = [];
+
+    // ground plots: irregular tone patches so the terrain reads as city
+    // blocks (lawns, lots, plazas) instead of one flat field
+    for (let y = -view.vh; y < view.maxScroll + view.vh * 2; y += 340) {
+      const s = Math.round(y / 340) * 31;
+      world.lots.push({
+        x: leftEdge - 420 - rand(s) * 200, y: y + rand(s + 1) * 160,
+        w: 200 + rand(s + 2) * 260, d: 180 + rand(s + 3) * 200,
+        k: 0.06 + rand(s + 4) * 0.08, dir: rand(s + 5) > 0.5 ? 1 : -1,
+      });
+      world.lots.push({
+        x: rightEdge + 20 + rand(s + 6) * 240, y: y + rand(s + 7) * 200,
+        w: 220 + rand(s + 8) * 320, d: 160 + rand(s + 9) * 220,
+        k: 0.06 + rand(s + 10) * 0.08, dir: rand(s + 11) > 0.5 ? 1 : -1,
+      });
+    }
 
     const B = (x, y, w, d, h, color, opt = {}) =>
       world.buildings.push({ x, y, w, d, h, color, windows: opt.windows, glow: opt.glow !== false, awning: opt.awning });
@@ -95,23 +113,23 @@ window.City = (() => {
       const y = s.worldY;
       switch (s.id) {
         case 'hero': // small welcome kiosk + green
-          B(bx - 110, y - 60, 100, 110, 34, '#d9b8a2', { windows: [3, 2] });
+          B(bx - 110, y - 60, 100, 110, 34, '#c99b6e', { windows: [3, 2] });
           break;
         case 'experience': // office tower + restaurant storefront
-          B(bx - 150, y - 210, 140, 190, 130, '#9fb4cc', { windows: [5, 6] });
-          B(bx - 130, y + 30, 120, 100, 30, '#e0a06c', { windows: [4, 1], awning: '#c8544a' });
+          B(bx - 150, y - 210, 140, 190, 130, '#7d98b8', { windows: [5, 6] });
+          B(bx - 130, y + 30, 120, 100, 30, '#cf7f4a', { windows: [4, 1], awning: '#b23a2e' });
           break;
         case 'projects': { // row of three distinct small buildings
-          B(bx - 128, y - 200, 112, 96, 52, '#c9897b', { windows: [4, 2] });
-          B(bx - 140, y - 70, 124, 100, 72, '#8fa98f', { windows: [4, 3] });
-          B(bx - 120, y + 66, 104, 92, 40, '#c9b07c', { windows: [3, 2] });
+          B(bx - 128, y - 200, 112, 96, 52, '#b06a52', { windows: [4, 2] });
+          B(bx - 140, y - 70, 124, 100, 72, '#7a9472', { windows: [4, 3] });
+          B(bx - 120, y + 66, 104, 92, 40, '#b99a55', { windows: [3, 2] });
           break;
         }
         case 'skills': // wide workshop/studio
-          B(bx - 190, y - 90, 180, 170, 46, '#a3919f', { windows: [6, 2] });
+          B(bx - 190, y - 90, 180, 170, 46, '#8a7286', { windows: [6, 2] });
           break;
         case 'contact': // tall glowing tower
-          B(bx - 150, y - 170, 136, 230, 150, '#6f7ba1', { windows: [5, 8] });
+          B(bx - 150, y - 170, 136, 230, 150, '#56628c', { windows: [5, 8] });
           break;
       }
       world.crosswalks.push(y - view.vh * 0.28);
@@ -135,7 +153,7 @@ window.City = (() => {
         const w = 80 + rand(seed + 1) * 70;
         const d = 90 + rand(seed + 2) * 90;
         const h = 24 + rand(seed + 3) * 60;
-        const tones = ['#b5a494', '#a8b0a0', '#b0a0ac', '#9aa8b8', '#c2af92'];
+        const tones = ['#a9705a', '#8f9a76', '#96708a', '#6e88a0', '#b09364'];
         B(leftEdge - 40 - w - rand(seed + 4) * 60, y, w, d, h,
           tones[seed % tones.length],
           { windows: [Math.max(2, Math.round(w / 34)), Math.max(1, Math.round(h / 26))] });
@@ -144,7 +162,7 @@ window.City = (() => {
       if (!nearX && rand(seed + 5) > 0.55) {
         const w = 60 + rand(seed + 6) * 50;
         B(rightEdge + 30 + rand(seed + 7) * 30, y + 60, w, 70 + rand(seed + 8) * 50,
-          16 + rand(seed + 9) * 22, '#b3aa9a',
+          16 + rand(seed + 9) * 22, '#9c8468',
           { windows: [2, 1] });
       }
       // trees on both sidewalk edges
@@ -288,6 +306,16 @@ window.City = (() => {
     amb.addColorStop(0.5, pal.ground);
     ctx.fillStyle = amb;
     ctx.fillRect(0, 0, vw, vh * 0.5);
+
+    // ground plots
+    for (const lot of world.lots) {
+      const sy = lot.y - scrollY;
+      if (sy + lot.d < -40 || sy > vh + 40) continue;
+      ctx.fillStyle = lot.dir === 1
+        ? mixHex(pal.ground, '#ffffff', lot.k)
+        : mixHex(pal.ground, '#141928', lot.k);
+      ctx.fillRect(lot.x, sy, lot.w, lot.d);
+    }
 
     const rx = world.roadCX - world.roadW / 2;
 

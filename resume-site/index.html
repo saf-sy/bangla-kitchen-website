@@ -17,10 +17,10 @@
   </button>
   <nav id="menu-overlay" aria-label="Resume sections" hidden>
     <ul>
-      <li><a href="#experience" data-stop="experience">Experience</a></li>
-      <li><a href="#projects" data-stop="projects">Projects</a></li>
-      <li><a href="#skills" data-stop="skills">Skills</a></li>
-      <li><a href="#contact" data-stop="contact">Contact</a></li>
+      <li><a href="#experience" data-stop="experience" data-exit="02">Experience</a></li>
+      <li><a href="#projects" data-stop="projects" data-exit="03">Projects</a></li>
+      <li><a href="#skills" data-stop="skills" data-exit="04">Skills</a></li>
+      <li><a href="#contact" data-stop="contact" data-exit="05">Contact</a></li>
     </ul>
   </nav>
 
@@ -29,15 +29,16 @@
   <main id="content">
 
     <section class="stop" id="hero" data-stop="hero">
-      <div class="card hero-card">
+      <div class="card hero-card" data-exit="">
         <h1>Safwan Syed</h1>
         <p class="tagline">Architectural Engineering @ UT Austin · Builder of things physical and digital</p>
+        <div class="hero-rule" aria-hidden="true"></div>
         <p class="scroll-hint" aria-hidden="true">scroll to drive <span class="down-arrow">▾</span></p>
       </div>
     </section>
 
     <section class="stop" id="experience" data-stop="experience">
-      <div class="card">
+      <div class="card" data-exit="Exit 2">
         <h2>Experience</h2>
         <ul class="entries">
           <li class="entry">
@@ -61,7 +62,7 @@
     </section>
 
     <section class="stop" id="projects" data-stop="projects">
-      <div class="card">
+      <div class="card" data-exit="Exit 3">
         <h2>Projects</h2>
         <ul class="entries">
           <li class="entry project">
@@ -89,7 +90,7 @@
     </section>
 
     <section class="stop" id="skills" data-stop="skills">
-      <div class="card">
+      <div class="card" data-exit="Exit 4">
         <h2>Skills</h2>
         <div class="skill-group">
           <h3>Engineering</h3>
@@ -110,7 +111,7 @@
     </section>
 
     <section class="stop" id="contact" data-stop="contact">
-      <div class="card">
+      <div class="card" data-exit="Exit 5">
         <h2>Contact</h2>
         <ul class="contact-links">
           <li><a href="PLACEHOLDER_EMAIL" aria-label="Email">
